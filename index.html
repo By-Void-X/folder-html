@@ -3,17 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ByVoid Labs - Beranda Project</title>
-    <link rel="stylesheet" href="style.css">
+    <title>ByVoid Labs - Run Project Hub</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0f1e;
+            font-family: 'Segoe UI', monospace;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+        .app-wrapper {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .sidebar {
+            flex: 1;
+            min-width: 260px;
+            background: #111827;
+            border-radius: 20px;
+            padding: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        .main-content {
+            flex: 3;
+            min-width: 500px;
+            background: #111827;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #2a2f3f;
+        }
+        .project-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .project-btn {
+            background: #1e2438;
+            border: 1px solid #2e3a55;
+            color: #00ffcc;
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: left;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .project-btn:hover {
+            background: #00ffcc22;
+            border-color: #00ffcc;
+            transform: translateX(5px);
+        }
+        .project-btn small {
+            display: block;
+            color: #aaa;
+            font-size: 11px;
+        }
+        .embed-area {
+            background: #fff;
+            border-radius: 16px;
+            overflow: auto;
+            min-height: 600px;
+            width: 100%;
+        }
+        iframe.project-frame {
+            width: 100%;
+            height: 650px;
+            border: none;
+            border-radius: 16px;
+            background: white;
+        }
+        h2 {
+            color: #00ffcc;
+            margin-bottom: 10px;
+        }
+        .back-home {
+            background: #2a2f3f;
+            border: none;
+            color: #ccc;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🧪 ByVoid Project Hub</h1>
-        <p>Repository: <strong>Zeen1146/BYVOID</strong></p>
-        <div id="project-list" class="project-grid">
-            <p>Loading project dari GitHub...</p>
+
+<div class="app-wrapper">
+    <!-- SIDEBAR KIRI: daftar project -->
+    <div class="sidebar">
+        <h2>📁 BYVOID PROJECTS</h2>
+        <p style="font-size:12px; margin-bottom:15px;">Klik project → langsung jalan di kanan</p>
+        <div id="dynamic-project-list" class="project-list">
+            Loading proyek dari GitHub...
         </div>
     </div>
-    <script src="script.js"></script>
+
+    <!-- AREA KANAN: tempat menjalankan project -->
+    <div class="main-content">
+        <button class="back-home" id="reset-home-btn">🏠 Kembali ke Beranda</button>
+        <div id="project-runner">
+            <div style="text-align:center; padding:60px 20px;">
+                🧪 Pilih project dari kiri untuk menjalankannya secara LIVE.<br>
+                <span style="color:#00ffcc;">QR generator, game, tool apapun akan berjalan penuh di sini.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const owner = "Zeen1146";
+    const repo = "BYVOID";
+    const rawBase = `https://raw.githubusercontent.com/${owner}/${repo}/main/`;
+    const pageBase = `https://${owner}.github.io/${repo}/`;
+
+    async function loadProjectList() {
+        const listDiv = document.getElementById("dynamic-project-list");
+        try {
+            const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/`);
+            const files = await res.json();
+            const htmlFiles = files.filter(f => f.type === "file" && f.name.endsWith(".html"));
+            
+            if (htmlFiles.length === 0) {
+                listDiv.innerHTML = "<p>Tidak ada file HTML.</p>";
+                return;
+            }
+            
+            let html = "";
+            htmlFiles.forEach(file => {
+                const fileName = file.name;
+                const cleanName = fileName.replace(".html", "");
+                html += `
+                    <div class="project-btn" data-url="${pageBase}${encodeURIComponent(fileName)}">
+                        🧩 ${cleanName}
+                        <small>📄 ${fileName}</small>
+                    </div>
+                `;
+            });
+            listDiv.innerHTML = html;
+            
+            // Tambahkan event klik ke setiap tombol project
+            document.querySelectorAll(".project-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const projectUrl = btn.getAttribute("data-url");
+                    runProject(projectUrl);
+                });
+            });
+        } catch (err) {
+            listDiv.innerHTML = `<p>Gagal load: ${err.message}</p>`;
+        }
+    }
+    
+    function runProject(url) {
+        const runner = document.getElementById("project-runner");
+        // Tampilkan dalam iframe agar semua JS/CSS internal project berjalan sempurna
+        runner.innerHTML = `
+            <div style="background:#0a0a0a; border-radius:12px; padding:8px;">
+                <iframe class="project-frame" src="${url}" title="Live Project"></iframe>
+            </div>
+        `;
+    }
+    
+    // Tombol kembali ke tampilan awal
+    document.getElementById("reset-home-btn").addEventListener("click", () => {
+        document.getElementById("project-runner").innerHTML = `
+            <div style="text-align:center; padding:60px 20px;">
+                🧪 Pilih project dari kiri untuk menjalankannya secara LIVE.<br>
+                <span style="color:#00ffcc;">QR generator, game, tool apapun akan berjalan penuh di sini.</span>
+            </div>
+        `;
+    });
+    
+    loadProjectList();
+</script>
 </body>
-</html>
+            </html>
