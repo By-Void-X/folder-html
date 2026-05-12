@@ -3,113 +3,260 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ByVoid Labs - Run Project Hub</title>
+    <title>ByVoid Labs | Nexus Project Hub</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #0a0f1e;
-            font-family: 'Segoe UI', monospace;
-            color: #e0e0e0;
-            padding: 20px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03060c);
+            font-family: 'Segoe UI', 'Poppins', monospace;
+            color: #eaeef5;
+            padding: 25px;
+            min-height: 100vh;
+        }
+
+        /* Gaya scrollbar kustom */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #11161f;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #00ffcc;
+            border-radius: 10px;
+        }
+
+        /* Header + tombol github */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            background: rgba(0, 20, 30, 0.6);
+            backdrop-filter: blur(12px);
+            padding: 12px 24px;
+            border-radius: 60px;
+            border: 1px solid #00ffcc33;
+        }
+        .title-section h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #00ffcc, #ff66cc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+        .title-section p {
+            font-size: 12px;
+            color: #9aa7c4;
+        }
+        .github-btn {
+            background: #1e2a3a;
+            padding: 10px 20px;
+            border-radius: 40px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #00ffcc88;
+            transition: 0.2s;
+        }
+        .github-btn:hover {
+            background: #00ffcc22;
+            border-color: #00ffcc;
+            color: #00ffcc;
+            transform: scale(1.02);
+            box-shadow: 0 0 12px #00ffcc66;
+        }
+
+        /* Layout utama: 2 kolom */
         .app-wrapper {
             display: flex;
-            gap: 20px;
+            gap: 24px;
             flex-wrap: wrap;
         }
+
+        /* Sidebar kiri - daftar project */
         .sidebar {
-            flex: 1;
-            min-width: 260px;
-            background: #111827;
-            border-radius: 20px;
+            flex: 1.2;
+            min-width: 280px;
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(8px);
+            border-radius: 32px;
             padding: 20px;
+            border: 1px solid #2d3e5f;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
             height: fit-content;
-            position: sticky;
-            top: 20px;
         }
-        .main-content {
-            flex: 3;
-            min-width: 500px;
-            background: #111827;
-            border-radius: 20px;
-            padding: 20px;
-            border: 1px solid #2a2f3f;
+        .sidebar h2 {
+            font-size: 1.5rem;
+            border-left: 5px solid #00ffcc;
+            padding-left: 15px;
+            margin-bottom: 20px;
         }
         .project-list {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-top: 20px;
         }
-        .project-btn {
-            background: #1e2438;
-            border: 1px solid #2e3a55;
-            color: #00ffcc;
-            padding: 12px;
-            border-radius: 12px;
-            cursor: pointer;
-            text-align: left;
-            font-weight: bold;
-            transition: 0.2s;
+        .project-card-side {
+            background: #0f1422cc;
+            border-radius: 20px;
+            padding: 12px 15px;
+            transition: all 0.2s ease;
+            border: 1px solid #2a3450;
         }
-        .project-btn:hover {
-            background: #00ffcc22;
+        .project-card-side:hover {
+            background: #1a2340;
             border-color: #00ffcc;
             transform: translateX(5px);
         }
-        .project-btn small {
-            display: block;
-            color: #aaa;
-            font-size: 11px;
-        }
-        .embed-area {
-            background: #fff;
-            border-radius: 16px;
-            overflow: auto;
-            min-height: 600px;
-            width: 100%;
-        }
-        iframe.project-frame {
-            width: 100%;
-            height: 650px;
-            border: none;
-            border-radius: 16px;
-            background: white;
-        }
-        h2 {
-            color: #00ffcc;
+        .project-name {
+            font-weight: bold;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             margin-bottom: 10px;
+            color: #bbd9ff;
         }
-        .back-home {
-            background: #2a2f3f;
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+        .btn-preview {
+            background: #1e2f3f;
             border: none;
-            color: #ccc;
-            padding: 6px 12px;
-            border-radius: 20px;
+            color: #9efff0;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 11px;
             cursor: pointer;
-            margin-bottom: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.1s;
+        }
+        .btn-tab {
+            background: #2a1e3f;
+            border: none;
+            color: #e0aaff;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-preview:hover, .btn-tab:hover {
+            filter: brightness(1.2);
+            transform: scale(0.96);
+        }
+
+        /* Area kanan: Live Preview */
+        .main-content {
+            flex: 2.5;
+            min-width: 480px;
+            background: rgba(8, 12, 22, 0.8);
+            backdrop-filter: blur(4px);
+            border-radius: 32px;
+            padding: 20px;
+            border: 1px solid #2d3e5f;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .preview-header h3 {
+            color: #00ffcc;
+            font-size: 1.3rem;
+        }
+        .reset-btn {
+            background: #2f2a44;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .iframe-container {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 0 0 2px #00ffcc33, 0 10px 30px black;
+        }
+        iframe {
+            width: 100%;
+            height: 580px;
+            border: none;
+            display: block;
+        }
+        .placeholder {
+            text-align: center;
+            padding: 80px 20px;
+            background: #0b1020;
+            border-radius: 24px;
+            color: #aaa;
+        }
+
+        @media (max-width: 800px) {
+            .app-wrapper { flex-direction: column; }
+            .main-content { min-width: auto; }
+            iframe { height: 450px; }
         }
     </style>
 </head>
 <body>
 
+<div class="top-header">
+    <div class="title-section">
+        <h1><i class="fas fa-cube"></i> ByVoid Nexus</h1>
+        <p>jalankan project HTML langsung · dua aksi: Preview atau Buka Tab</p>
+    </div>
+    <a href="https://github.com/Zeen1146/BYVOID" target="_blank" class="github-btn">
+        <i class="fab fa-github"></i> GitHub Repo →
+    </a>
+</div>
+
 <div class="app-wrapper">
-    <!-- SIDEBAR KIRI: daftar project -->
+    <!-- SIDEBAR KIRI: Daftar Project -->
     <div class="sidebar">
-        <h2>📁 BYVOID PROJECTS</h2>
-        <p style="font-size:12px; margin-bottom:15px;">Klik project → langsung jalan di kanan</p>
-        <div id="dynamic-project-list" class="project-list">
-            Loading proyek dari GitHub...
+        <h2><i class="fas fa-code-branch"></i> Project Archive</h2>
+        <div id="project-list-sidebar" class="project-list">
+            Loading project dari GitHub...
         </div>
     </div>
 
-    <!-- AREA KANAN: tempat menjalankan project -->
+    <!-- KANAN: Area Live Preview -->
     <div class="main-content">
-        <button class="back-home" id="reset-home-btn">🏠 Kembali ke Beranda</button>
-        <div id="project-runner">
-            <div style="text-align:center; padding:60px 20px;">
-                🧪 Pilih project dari kiri untuk menjalankannya secara LIVE.<br>
-                <span style="color:#00ffcc;">QR generator, game, tool apapun akan berjalan penuh di sini.</span>
+        <div class="preview-header">
+            <h3><i class="fas fa-eye"></i> Live Sandbox</h3>
+            <button id="resetPreviewBtn" class="reset-btn"><i class="fas fa-undo-alt"></i> Bersihkan Preview</button>
+        </div>
+        <div id="previewArea">
+            <div class="placeholder">
+                <i class="fas fa-mouse-pointer" style="font-size: 40px; opacity: 0.6;"></i>
+                <p style="margin-top: 15px;">Pilih project dari kiri.<br>Tekan <strong>▶ Preview</strong> untuk mencoba di sini.<br>Atau <strong>🔗 Buka Tab</strong> untuk layar penuh terpisah.</p>
             </div>
         </div>
     </div>
@@ -118,67 +265,77 @@
 <script>
     const owner = "Zeen1146";
     const repo = "BYVOID";
-    const rawBase = `https://raw.githubusercontent.com/${owner}/${repo}/main/`;
     const pageBase = `https://${owner}.github.io/${repo}/`;
 
-    async function loadProjectList() {
-        const listDiv = document.getElementById("dynamic-project-list");
+    async function loadProjects() {
+        const container = document.getElementById("project-list-sidebar");
         try {
             const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/`);
             const files = await res.json();
             const htmlFiles = files.filter(f => f.type === "file" && f.name.endsWith(".html"));
             
             if (htmlFiles.length === 0) {
-                listDiv.innerHTML = "<p>Tidak ada file HTML.</p>";
+                container.innerHTML = "<p>Tidak ada file HTML.</p>";
                 return;
             }
-            
-            let html = "";
+
+            let sidebarHtml = "";
             htmlFiles.forEach(file => {
                 const fileName = file.name;
-                const cleanName = fileName.replace(".html", "");
-                html += `
-                    <div class="project-btn" data-url="${pageBase}${encodeURIComponent(fileName)}">
-                        🧩 ${cleanName}
-                        <small>📄 ${fileName}</small>
+                const displayName = fileName.replace(".html", "");
+                const fullUrl = pageBase + encodeURIComponent(fileName);
+                
+                sidebarHtml += `
+                    <div class="project-card-side" data-url="${fullUrl}">
+                        <div class="project-name">
+                            <i class="fas fa-file-code"></i> ${displayName}
+                        </div>
+                        <div class="button-group">
+                            <button class="btn-preview" data-url="${fullUrl}">
+                                <i class="fas fa-play"></i> Preview Live
+                            </button>
+                            <a href="${fullUrl}" target="_blank" class="btn-tab">
+                                <i class="fas fa-external-link-alt"></i> Buka Tab Baru
+                            </a>
+                        </div>
                     </div>
                 `;
             });
-            listDiv.innerHTML = html;
-            
-            // Tambahkan event klik ke setiap tombol project
-            document.querySelectorAll(".project-btn").forEach(btn => {
-                btn.addEventListener("click", () => {
-                    const projectUrl = btn.getAttribute("data-url");
-                    runProject(projectUrl);
+            container.innerHTML = sidebarHtml;
+
+            // Pasang event listener untuk semua tombol Preview
+            document.querySelectorAll(".btn-preview").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    const url = btn.getAttribute("data-url");
+                    showPreview(url);
                 });
             });
         } catch (err) {
-            listDiv.innerHTML = `<p>Gagal load: ${err.message}</p>`;
+            container.innerHTML = `<p>Error: ${err.message}</p>`;
         }
     }
-    
-    function runProject(url) {
-        const runner = document.getElementById("project-runner");
-        // Tampilkan dalam iframe agar semua JS/CSS internal project berjalan sempurna
-        runner.innerHTML = `
-            <div style="background:#0a0a0a; border-radius:12px; padding:8px;">
-                <iframe class="project-frame" src="${url}" title="Live Project"></iframe>
+
+    function showPreview(url) {
+        const previewArea = document.getElementById("previewArea");
+        previewArea.innerHTML = `
+            <div class="iframe-container">
+                <iframe src="${url}" title="Live preview project" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals"></iframe>
             </div>
         `;
     }
-    
-    // Tombol kembali ke tampilan awal
-    document.getElementById("reset-home-btn").addEventListener("click", () => {
-        document.getElementById("project-runner").innerHTML = `
-            <div style="text-align:center; padding:60px 20px;">
-                🧪 Pilih project dari kiri untuk menjalankannya secara LIVE.<br>
-                <span style="color:#00ffcc;">QR generator, game, tool apapun akan berjalan penuh di sini.</span>
+
+    // Reset Preview (kembalikan ke placeholder)
+    document.getElementById("resetPreviewBtn").addEventListener("click", () => {
+        document.getElementById("previewArea").innerHTML = `
+            <div class="placeholder">
+                <i class="fas fa-mouse-pointer" style="font-size: 40px; opacity: 0.6;"></i>
+                <p style="margin-top: 15px;">Pilih project dari kiri.<br>Tekan <strong>▶ Preview</strong> untuk mencoba di sini.<br>Atau <strong>🔗 Buka Tab</strong> untuk layar penuh terpisah.</p>
             </div>
         `;
     });
-    
-    loadProjectList();
+
+    loadProjects();
 </script>
 </body>
-            </html>
+</html>
