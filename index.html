@@ -3,57 +3,404 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zeen1146 | Portfolio</title>
+    <title>ByVoid | Portfolio</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: #0a0a0a; color: #e5e5e5; padding: 40px 20px; }
-        .container { max-width: 1100px; margin: 0 auto; }
-        .header { text-align: center; margin-bottom: 40px; }
-        .avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #3b82f6; margin-bottom: 20px; object-fit: cover; }
-        h1 { font-size: 2rem; margin-bottom: 10px; background: linear-gradient(135deg, #fff, #3b82f6); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .bio { color: #888; margin-bottom: 20px; }
-        .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 40px; flex-wrap: wrap; }
-        .stat-card { background: #1a1a1a; padding: 12px 24px; border-radius: 40px; border: 1px solid #333; }
-        .stat-number { font-size: 1.8rem; font-weight: bold; color: #3b82f6; }
-        .stat-label { font-size: 0.8rem; color: #888; }
-        .controls { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-bottom: 30px; }
-        .search-box input { padding: 12px 20px; background: #1a1a1a; border: 1px solid #333; border-radius: 40px; color: white; width: 250px; outline: none; }
-        .search-box input:focus { border-color: #3b82f6; }
-        .filter-group { display: flex; gap: 10px; flex-wrap: wrap; }
-        .filter-btn { background: #1a1a1a; border: 1px solid #333; padding: 8px 20px; border-radius: 40px; color: #ccc; cursor: pointer; }
-        .filter-btn.active, .filter-btn:hover { background: #3b82f6; color: white; border-color: #3b82f6; }
-        .info-bar { background: #111; border-radius: 16px; padding: 12px 20px; margin-bottom: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; font-size: 0.85rem; color: #888; border: 1px solid #333; }
-        .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-top: 20px; }
-        .project-card { background: #111; border: 1px solid #333; border-radius: 20px; padding: 20px; transition: 0.2s; }
-        .project-card:hover { border-color: #3b82f6; transform: translateY(-3px); }
-        .project-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; }
-        .project-name a { color: white; text-decoration: none; }
-        .project-name a:hover { color: #3b82f6; }
-        .project-desc { color: #999; font-size: 0.85rem; margin: 10px 0; line-height: 1.5; }
-        .tech-tag { background: #1e1e1e; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; color: #3b82f6; display: inline-block; margin-right: 6px; margin-bottom: 6px; border: 1px solid #2a2a2a; }
-        .project-stats { display: flex; gap: 15px; margin-top: 12px; font-size: 0.75rem; color: #666; }
-        .file-list { margin-top: 15px; border-top: 1px solid #2a2a2a; padding-top: 12px; }
-        .file-list h4 { font-size: 0.75rem; color: #888; margin-bottom: 8px; }
-        .file-item { display: inline-block; background: #1a1a1a; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; margin: 3px; cursor: pointer; }
-        .file-item:hover { background: #3b82f6; color: white; }
-        .loading, .error { text-align: center; padding: 60px; color: #888; }
-        footer { text-align: center; margin-top: 50px; padding-top: 30px; border-top: 1px solid #2a2a2a; color: #666; font-size: 0.8rem; }
-        footer a { color: #3b82f6; text-decoration: none; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            color: #e5e5e5;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas untuk Particle Network */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Glassmorphism effect */
+        .glass-card {
+            background: rgba(17, 17, 17, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 28px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(239, 68, 68, 0.6);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #ef4444;
+            margin-bottom: 20px;
+            object-fit: cover;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+        }
+
+        /* Animasi teks berjalan warna merah */
+        .marquee-red {
+            background: linear-gradient(90deg, #ef4444, #dc2626, #ef4444);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shine 2s linear infinite, pulse 1.5s ease-in-out infinite;
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            display: inline-block;
+        }
+
+        @keyframes shine {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; text-shadow: 0 0 5px #ef4444; }
+            50% { opacity: 0.8; text-shadow: 0 0 20px #ef4444; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .bio {
+            color: #9ca3af;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 12px 28px;
+            border-radius: 60px;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            border-color: #ef4444;
+            transform: scale(1.05);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ef4444;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .search-box input {
+            padding: 12px 20px;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 40px;
+            color: white;
+            width: 260px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: #ef4444;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 8px 24px;
+            border-radius: 40px;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+        }
+
+        .info-bar {
+            background: rgba(17, 17, 17, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 12px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: #9ca3af;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .project-card {
+            background: rgba(17, 17, 17, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 24px;
+            padding: 24px;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            cursor: pointer;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .project-card:hover {
+            border-color: #ef4444;
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 35px -12px rgba(239, 68, 68, 0.3);
+            background: rgba(20, 20, 20, 0.85);
+        }
+
+        /* Animasi klik */
+        .project-card:active {
+            transform: scale(0.98);
+            transition: transform 0.05s;
+        }
+
+        .project-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .project-name a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .project-name a:hover {
+            color: #ef4444;
+        }
+
+        .featured-badge {
+            background: #ef4444;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .project-desc {
+            color: #9ca3af;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin: 12px 0;
+        }
+
+        .tech-tag {
+            background: rgba(30, 30, 30, 0.9);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            color: #ef4444;
+            display: inline-block;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            transition: all 0.2s;
+        }
+
+        .tech-tag:hover {
+            background: #ef4444;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .file-list {
+            margin-top: 18px;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            padding-top: 14px;
+        }
+
+        .file-list h4 {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .file-item {
+            display: inline-block;
+            background: rgba(26, 26, 26, 0.8);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            margin: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            font-weight: 500;
+        }
+
+        .file-item:hover {
+            background: #ef4444;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        .file-item:active {
+            transform: scale(0.95);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            color: #6b7280;
+            font-size: 0.75rem;
+        }
+
+        footer a {
+            color: #ef4444;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 640px) {
+            .container { padding: 20px 16px; }
             .controls { flex-direction: column; }
             .search-box input { width: 100%; }
             .projects-grid { grid-template-columns: 1fr; }
+            .marquee-red { font-size: 1.8rem; }
+        }
+
+        /* Loading animation */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #9ca3af;
         }
     </style>
 </head>
 <body>
+
+<canvas id="particleCanvas"></canvas>
+
 <div class="container">
     <div class="header">
         <img class="avatar" src="https://avatars.githubusercontent.com/u/186116108?v=4" alt="avatar">
-        <h1>Zeen1146</h1>
-        <p class="bio">Developer | Creator of BYVOID & financial</p>
+        <h1><span class="marquee-red">ByVoid</span></h1>
+        <p class="bio">Developer | Creator of ByVoid Ecosystem</p>
         <div class="stats">
-            <div class="stat-card"><div class="stat-number">2</div><div class="stat-label">Repositori</div></div>
+            <div class="stat-card"><div class="stat-number">2</div><div class="stat-label">Repositories</div></div>
             <div class="stat-card"><div class="stat-number">0</div><div class="stat-label">Followers</div></div>
             <div class="stat-card"><div class="stat-number">0</div><div class="stat-label">Following</div></div>
         </div>
@@ -71,17 +418,128 @@
 
     <div class="info-bar">
         <span>📦 Menampilkan <strong id="displayCount">0</strong> project</span>
-        <span>✅ Klik app untuk langsung jalan</span>
+        <span>⚡ Klik app untuk langsung menjalankan</span>
     </div>
 
     <div class="projects-grid" id="projectsGrid"></div>
 
     <footer>
-        <p>© 2026 Zeen1146 • <a href="https://github.com/Zeen1146" target="_blank">GitHub Profile</a></p>
+        <p>© 2026 ByVoid • <a href="https://github.com/Zeen1146" target="_blank">GitHub Profile</a></p>
+        <p style="margin-top: 8px;">✦ Particle Network | Interactive Portfolio ✦</p>
     </footer>
 </div>
 
 <script>
+    // Particle Network Animation
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let mouseX = null, mouseY = null;
+    let connectionDistance = 130;
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 0.6;
+            this.vy = (Math.random() - 0.5) * 0.6;
+            this.radius = Math.random() * 2 + 1.5;
+            this.color = `rgba(239, 68, 68, ${Math.random() * 0.5 + 0.2})`;
+        }
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+            if (this.x < 0) this.x = canvas.width;
+            if (this.x > canvas.width) this.x = 0;
+            if (this.y < 0) this.y = canvas.height;
+            if (this.y > canvas.height) this.y = 0;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+    }
+
+    function initParticles(count) {
+        particles = [];
+        for (let i = 0; i < count; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function drawLines() {
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distance = Math.hypot(dx, dy);
+                if (distance < connectionDistance) {
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    const opacity = (1 - distance / connectionDistance) * 0.25;
+                    ctx.strokeStyle = `rgba(239, 68, 68, ${opacity})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                }
+            }
+        }
+        // Mouse connection
+        if (mouseX !== null && mouseY !== null) {
+            for (let p of particles) {
+                const dx = p.x - mouseX;
+                const dy = p.y - mouseY;
+                const dist = Math.hypot(dx, dy);
+                if (dist < connectionDistance) {
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(mouseX, mouseY);
+                    const opacity = (1 - dist / connectionDistance) * 0.4;
+                    ctx.strokeStyle = `rgba(239, 68, 68, ${opacity})`;
+                    ctx.lineWidth = 1.2;
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let p of particles) {
+            p.update();
+            p.draw();
+        }
+        drawLines();
+        requestAnimationFrame(animateParticles);
+    }
+
+    window.addEventListener('resize', () => {
+        resizeCanvas();
+        initParticles(90);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    window.addEventListener('mouseleave', () => {
+        mouseX = null;
+        mouseY = null;
+    });
+
+    resizeCanvas();
+    initParticles(90);
+    animateParticles();
+
+    // Portfolio Data
     const projects = [
         {
             name: "BYVOID",
@@ -91,8 +549,8 @@
             featured: true,
             baseUrl: "https://zeen1146.github.io/BYVOID/",
             apps: [
-                { name: "QR Kode Generator", file: "QR%20kode%20generator%20V2.html", icon: "📱" },
-                { name: "Enkripsi Text", file: "enkripsi.html", icon: "🔐" },
+                { name: "QR Kode Generator", file: "QR%20kode%20generator%20V2.html", icon: "🔳" },
+                { name: "Enkripsi Text", file: "enkripsi.html", icon: "🔒" },
                 { name: "ID Generator", file: "id.html", icon: "🆔" },
                 { name: "Matrix Video Effect", file: "matrix-video.html", icon: "🎬" }
             ]
@@ -131,19 +589,21 @@
     function renderProjects() {
         const grid = document.getElementById('projectsGrid');
         if (filteredProjects.length === 0) {
-            grid.innerHTML = '<div class="loading">📭 Tidak ada project</div>';
+            grid.innerHTML = '<div class="loading">📭 Tidak ada project yang cocok</div>';
             return;
         }
         grid.innerHTML = filteredProjects.map(p => `
             <div class="project-card">
                 <div class="project-name">
                     <a href="${p.url}" target="_blank">📁 ${p.name}</a>
-                    <span style="background:#3b82f6; padding:2px 10px; border-radius:20px; font-size:0.65rem;">⭐ Featured</span>
+                    <span class="featured-badge">★ Featured</span>
                 </div>
                 <div class="project-desc">${p.description}</div>
-                <div><span class="tech-tag">${p.language}</span></div>
+                <div>
+                    <span class="tech-tag">${p.language}</span>
+                </div>
                 <div class="file-list">
-                    <h4>🚀 Klik untuk jalan:</h4>
+                    <h4>▶ APPS (klik untuk menjalankan):</h4>
                     ${p.apps.map(app => `
                         <div class="file-item" onclick="window.open('${p.baseUrl}${app.file}', '_blank')">
                             ${app.icon} ${app.name}
