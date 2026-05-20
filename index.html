@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zeen1146 | GitHub Portfolio</title>
+    <title>Zeen1146 | Portfolio</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: #0a0a0a; color: #e5e5e5; padding: 40px 20px; }
@@ -30,8 +30,13 @@
         .project-name a { color: white; text-decoration: none; }
         .project-name a:hover { color: #3b82f6; }
         .project-desc { color: #999; font-size: 0.85rem; margin: 10px 0; line-height: 1.5; }
-        .tech-tag { background: #1e1e1e; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; color: #3b82f6; display: inline-block; margin-right: 6px; margin-bottom: 6px; border: 1px solid #2a2a2a; }
+        .tech-tag { background: #1e1e1e; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; color: #3b82f6; display: inline-block; margin-right: 6px; margin-bottom: 6px; border: 1px solid #2a2a2a; cursor: pointer; }
+        .tech-tag:hover { background: #3b82f6; color: white; }
         .project-stats { display: flex; gap: 15px; margin-top: 12px; font-size: 0.75rem; color: #666; }
+        .file-list { margin-top: 15px; border-top: 1px solid #2a2a2a; padding-top: 12px; }
+        .file-list h4 { font-size: 0.75rem; color: #888; margin-bottom: 8px; }
+        .file-item { display: inline-block; background: #1a1a1a; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; margin: 3px; cursor: pointer; }
+        .file-item:hover { background: #3b82f6; color: white; }
         .loading, .error { text-align: center; padding: 60px; color: #888; }
         .error { color: #ef4444; }
         footer { text-align: center; margin-top: 50px; padding-top: 30px; border-top: 1px solid #2a2a2a; color: #666; font-size: 0.8rem; }
@@ -48,11 +53,11 @@
     <div class="header">
         <img class="avatar" id="avatar" src="https://avatars.githubusercontent.com/u/186116108?v=4" alt="avatar">
         <h1 id="username">Zeen1146</h1>
-        <p class="bio" id="bio">Developer | Loading profile...</p>
-        <div class="stats" id="stats">
-            <div class="stat-card"><div class="stat-number" id="repoCount">-</div><div class="stat-label">Repositori</div></div>
-            <div class="stat-card"><div class="stat-number" id="followers">-</div><div class="stat-label">Followers</div></div>
-            <div class="stat-card"><div class="stat-number" id="following">-</div><div class="stat-label">Following</div></div>
+        <p class="bio" id="bio">Developer | Full-stack Creator</p>
+        <div class="stats">
+            <div class="stat-card"><div class="stat-number" id="repoCount">2</div><div class="stat-label">Repositori</div></div>
+            <div class="stat-card"><div class="stat-number" id="followers">0</div><div class="stat-label">Followers</div></div>
+            <div class="stat-card"><div class="stat-number" id="following">0</div><div class="stat-label">Following</div></div>
         </div>
     </div>
 
@@ -63,155 +68,125 @@
         <div class="filter-group">
             <button class="filter-btn active" data-filter="all">Semua</button>
             <button class="filter-btn" data-filter="featured">Featured</button>
-            <button class="filter-btn" data-filter="HTML">HTML</button>
-            <button class="filter-btn" data-filter="JavaScript">JavaScript</button>
+            <button class="filter-btn" data-filter="web">Web App</button>
         </div>
     </div>
 
     <div class="info-bar">
-        <span>📦 Menampilkan <strong id="displayCount">0</strong> dari <span id="totalCount">0</span> project</span>
-        <span>🔄 Auto-sync dari GitHub</span>
+        <span>📦 Menampilkan <strong id="displayCount">0</strong> project</span>
+        <span>🔄 Klik file untuk langsung jalan</span>
     </div>
 
     <div class="projects-grid" id="projectsGrid">
-        <div class="loading">⏳ Memuat data dari GitHub API...</div>
+        <div class="loading">⏳ Memuat daftar project...</div>
     </div>
 
     <footer>
         <p>© 2026 Zeen1146 • <a href="https://github.com/Zeen1146" target="_blank">GitHub Profile</a></p>
-        <p style="margin-top: 8px;">🚀 Semua repository otomatis tersinkronasi</p>
+        <p style="margin-top: 8px;">✨ Klik file HTML untuk preview langsung</p>
     </footer>
 </div>
 
 <script>
-    const GITHUB_USERNAME = "Zeen1146";
-    
-    let allRepos = [];
-    let filteredRepos = [];
+    // Daftar file yang bisa diakses langsung (web apps)
+    const webFiles = [
+        { name: "QR Kode Generator", file: "QR%20kode%20generator%20V2.html", repo: "BYVOID", desc: "Generate QR code dengan mudah", icon: "📱" },
+        { name: "Enkripsi Text", file: "enkripsi.html", repo: "BYVOID", desc: "Enkripsi dan dekripsi teks sederhana", icon: "🔐" },
+        { name: "ID Generator", file: "id.html", repo: "BYVOID", desc: "Generate ID unik otomatis", icon: "🆔" },
+        { name: "Matrix Video Effect", file: "matrix-video.html", repo: "BYVOID", desc: "Efek matrix keren dengan video", icon: "🎬" },
+        { name: "Financial", file: "index.html", repo: "financial", desc: "Aplikasi pencatatan keuangan & target tabungan", icon: "💰" }
+    ];
+
+    const projects = [
+        {
+            name: "BYVOID",
+            description: "Kumpulan project web tools: QR Generator, Enkripsi, ID Generator, Matrix Effect",
+            url: "https://github.com/Zeen1146/BYVOID",
+            language: "HTML/CSS/JS",
+            stars: 0,
+            forks: 0,
+            featured: true,
+            files: webFiles.filter(f => f.repo === "BYVOID")
+        },
+        {
+            name: "financial",
+            description: "Aplikasi pencatatan keuangan dan target tabungan dengan Rupiah",
+            url: "https://github.com/Zeen1146/financial",
+            language: "JavaScript",
+            stars: 0,
+            forks: 0,
+            featured: true,
+            files: webFiles.filter(f => f.repo === "financial")
+        }
+    ];
+
+    let filteredProjects = [];
     let currentFilter = "all";
     let searchQuery = "";
 
-    async function fetchGitHub(endpoint) {
-        const response = await fetch(`https://api.github.com/${endpoint}`);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return response.json();
-    }
-
-    async function loadPortfolio() {
-        try {
-            // Ambil data user
-            const userData = await fetchGitHub(`users/${GITHUB_USERNAME}`);
-            document.getElementById('avatar').src = userData.avatar_url;
-            document.getElementById('username').innerHTML = userData.name || userData.login;
-            document.getElementById('bio').innerHTML = userData.bio || `${userData.login} — Developer portfolio auto-sync dari GitHub`;
-            document.getElementById('repoCount').innerText = userData.public_repos;
-            document.getElementById('followers').innerText = userData.followers;
-            document.getElementById('following').innerText = userData.following;
-
-            // Ambil daftar repo
-            const reposData = await fetchGitHub(`users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
-            
-            allRepos = reposData.map(repo => ({
-                id: repo.id,
-                name: repo.name,
-                description: repo.description || "Tidak ada deskripsi",
-                html_url: repo.html_url,
-                homepage: repo.homepage,
-                language: repo.language || "Other",
-                stargazers_count: repo.stargazers_count,
-                forks_count: repo.forks_count,
-                updated_at: repo.updated_at,
-                isFeatured: repo.name === "BYVOID" || repo.name === "financial" // Mark BYVOID & financial as featured
-            }));
-
-            // Urutkan: featured dulu, lalu berdasarkan update terbaru
-            allRepos.sort((a, b) => {
-                if (a.isFeatured !== b.isFeatured) return a.isFeatured ? -1 : 1;
-                return new Date(b.updated_at) - new Date(a.updated_at);
-            });
-            
-            applyFilters();
-        } catch (error) {
-            console.error(error);
-            document.getElementById('projectsGrid').innerHTML = `
-                <div class="error">
-                    ❌ Gagal mengambil data dari GitHub API<br>
-                    <small>${error.message}</small><br><br>
-                    💡 Coba refresh halaman
-                </div>
-            `;
-        }
-    }
-
     function applyFilters() {
-        let filtered = [...allRepos];
+        let filtered = [...projects];
         
-        if (currentFilter !== "all" && currentFilter !== "featured") {
-            filtered = filtered.filter(repo => repo.language === currentFilter);
-        } else if (currentFilter === "featured") {
-            filtered = filtered.filter(repo => repo.isFeatured === true);
+        if (currentFilter === "featured") {
+            filtered = filtered.filter(p => p.featured === true);
+        } else if (currentFilter === "web") {
+            filtered = filtered.filter(p => p.files.length > 0);
         }
         
         if (searchQuery.trim()) {
             const query = searchQuery.toLowerCase();
-            filtered = filtered.filter(repo => 
-                repo.name.toLowerCase().includes(query) ||
-                (repo.description && repo.description.toLowerCase().includes(query)) ||
-                (repo.language && repo.language.toLowerCase().includes(query))
+            filtered = filtered.filter(p => 
+                p.name.toLowerCase().includes(query) ||
+                (p.description && p.description.toLowerCase().includes(query))
             );
         }
         
-        filteredRepos = filtered;
-        document.getElementById('displayCount').innerText = filteredRepos.length;
-        document.getElementById('totalCount').innerText = allRepos.length;
+        filteredProjects = filtered;
+        document.getElementById('displayCount').innerText = filteredProjects.length;
         renderProjects();
     }
 
     function renderProjects() {
         const grid = document.getElementById('projectsGrid');
         
-        if (filteredRepos.length === 0) {
-            grid.innerHTML = `<div class="loading">📭 Tidak ada project yang sesuai</div>`;
+        if (filteredProjects.length === 0) {
+            grid.innerHTML = '<div class="loading">📭 Tidak ada project yang sesuai</div>';
             return;
         }
         
-        grid.innerHTML = filteredRepos.map(repo => `
+        grid.innerHTML = filteredProjects.map(project => `
             <div class="project-card">
                 <div class="project-name">
-                    <a href="${repo.html_url}" target="_blank">📁 ${escapeHtml(repo.name)}</a>
-                    ${repo.isFeatured ? '<span style="background:#3b82f6; padding:2px 10px; border-radius:20px; font-size:0.65rem;">⭐ Featured</span>' : ''}
+                    <a href="${project.url}" target="_blank">📁 ${project.name}</a>
+                    <span style="background:#3b82f6; padding:2px 10px; border-radius:20px; font-size:0.65rem;">⭐ Featured</span>
                 </div>
-                <div class="project-desc">${escapeHtml(repo.description)}</div>
+                <div class="project-desc">${project.description}</div>
                 <div>
-                    ${repo.language !== "Other" ? `<span class="tech-tag">${escapeHtml(repo.language)}</span>` : ''}
+                    <span class="tech-tag">${project.language}</span>
+                </div>
+                <div class="file-list">
+                    <h4>🚀 APPS (Klik untuk jalan):</h4>
+                    ${project.files.map(file => `
+                        <div class="file-item" onclick="openWebApp('${file.repo}', '${file.file}', '${file.name}')">
+                            ${file.icon} ${file.name}
+                        </div>
+                    `).join('')}
                 </div>
                 <div class="project-stats">
-                    <span>⭐ ${repo.stargazers_count}</span>
-                    <span>🔄 ${repo.forks_count}</span>
-                    <span>📅 ${formatDate(repo.updated_at)}</span>
+                    <span>⭐ ${project.stars}</span>
+                    <span>🔄 ${project.forks}</span>
+                    <span>💻 ${project.language}</span>
                 </div>
             </div>
         `).join('');
     }
 
-    function formatDate(dateStr) {
-        const date = new Date(dateStr);
-        const now = new Date();
-        const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-        if (diffDays < 1) return 'Hari ini';
-        if (diffDays < 7) return `${diffDays} hari lalu`;
-        if (diffDays < 30) return `${Math.floor(diffDays / 7)} minggu lalu`;
-        return date.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' });
-    }
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
+    // Fungsi buka web app langsung
+    function openWebApp(repo, fileName, appName) {
+        // Karena repo BYVOID udah enable GitHub Pages, pake raw.githack biar langsung jalan
+        const rawUrl = `https://raw.githack.com/Zeen1146/${repo}/main/${fileName}`;
+        // Buka di tab baru
+        window.open(rawUrl, '_blank');
     }
 
     function initEventListeners() {
@@ -231,7 +206,7 @@
     }
 
     initEventListeners();
-    loadPortfolio();
+    applyFilters();
 </script>
 </body>
     </html>
