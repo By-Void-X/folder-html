@@ -5,522 +5,233 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zeen1146 | GitHub Portfolio</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0a;
-            color: #e5e5e5;
-            scroll-behavior: smooth;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: radial-gradient(#ffffff10 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 24px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .header {
-            padding: 60px 0 40px;
-            text-align: center;
-            border-bottom: 1px solid #2a2a2a;
-        }
-
-        .avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #3b82f6;
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #fff, #3b82f6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 12px;
-        }
-
-        .bio {
-            color: #a0a0a0;
-            max-width: 600px;
-            margin: 0 auto 20px;
-            line-height: 1.6;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 32px;
-            margin-top: 24px;
-            flex-wrap: wrap;
-        }
-
-        .stat-card {
-            background: #1a1a1a;
-            padding: 12px 24px;
-            border-radius: 40px;
-            border: 1px solid #2a2a2a;
-        }
-
-        .stat-number {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #3b82f6;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: #888;
-        }
-
-        .controls {
-            padding: 30px 0 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .search-box {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 12px 20px;
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 40px;
-            color: white;
-            font-size: 0.9rem;
-            outline: none;
-        }
-
-        .search-box input:focus {
-            border-color: #3b82f6;
-        }
-
-        .filter-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 8px 20px;
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 40px;
-            color: #e5e5e5;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.85rem;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background: #3b82f6;
-            border-color: #3b82f6;
-            color: white;
-        }
-
-        .info-bar {
-            background: #111;
-            border-radius: 16px;
-            padding: 12px 20px;
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-            font-size: 0.85rem;
-            color: #888;
-            border: 1px solid #2a2a2a;
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 24px;
-            padding: 20px 0 60px;
-        }
-
-        .project-card {
-            background: #111;
-            border: 1px solid #2a2a2a;
-            border-radius: 24px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .project-card:hover {
-            transform: translateY(-4px);
-            border-color: #3b82f6;
-            box-shadow: 0 10px 30px -10px rgba(59,130,246,0.2);
-        }
-
-        .project-content {
-            padding: 20px;
-        }
-
-        .project-name {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .project-name a {
-            color: white;
-            text-decoration: none;
-        }
-
-        .project-name a:hover {
-            color: #3b82f6;
-        }
-
-        .project-desc {
-            color: #a0a0a0;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            margin: 12px 0;
-        }
-
-        .tech-stack {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 12px 0;
-        }
-
-        .tech-tag {
-            background: #1e1e1e;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            color: #3b82f6;
-            border: 1px solid #2a2a2a;
-        }
-
-        .project-stats {
-            display: flex;
-            gap: 16px;
-            margin-top: 12px;
-            font-size: 0.75rem;
-            color: #777;
-        }
-
-        .project-stats span {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 60px;
-            color: #888;
-        }
-
-        .error {
-            text-align: center;
-            padding: 60px;
-            color: #ef4444;
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px 0;
-            border-top: 1px solid #2a2a2a;
-            color: #666;
-            font-size: 0.8rem;
-        }
-
-        .github-corner {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #1a1a1a;
-            padding: 12px;
-            border-radius: 50%;
-            border: 1px solid #2a2a2a;
-            transition: all 0.2s;
-            z-index: 100;
-        }
-
-        .github-corner:hover {
-            background: #3b82f6;
-            transform: scale(1.05);
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: #0a0a0a; color: #e5e5e5; padding: 40px 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .avatar { width: 100px; height: 100px; border-radius: 50%; border: 3px solid #3b82f6; margin-bottom: 20px; object-fit: cover; }
+        h1 { font-size: 2rem; margin-bottom: 10px; background: linear-gradient(135deg, #fff, #3b82f6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .bio { color: #888; margin-bottom: 20px; }
+        .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 40px; flex-wrap: wrap; }
+        .stat-card { background: #1a1a1a; padding: 12px 24px; border-radius: 40px; border: 1px solid #333; }
+        .stat-number { font-size: 1.8rem; font-weight: bold; color: #3b82f6; }
+        .stat-label { font-size: 0.8rem; color: #888; }
+        .controls { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-bottom: 30px; }
+        .search-box input { padding: 12px 20px; background: #1a1a1a; border: 1px solid #333; border-radius: 40px; color: white; width: 250px; outline: none; }
+        .search-box input:focus { border-color: #3b82f6; }
+        .filter-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        .filter-btn { background: #1a1a1a; border: 1px solid #333; padding: 8px 20px; border-radius: 40px; color: #ccc; cursor: pointer; }
+        .filter-btn.active, .filter-btn:hover { background: #3b82f6; color: white; border-color: #3b82f6; }
+        .info-bar { background: #111; border-radius: 16px; padding: 12px 20px; margin-bottom: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; font-size: 0.85rem; color: #888; border: 1px solid #333; }
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-top: 20px; }
+        .project-card { background: #111; border: 1px solid #333; border-radius: 20px; padding: 20px; transition: 0.2s; }
+        .project-card:hover { border-color: #3b82f6; transform: translateY(-3px); }
+        .project-name { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; }
+        .project-name a { color: white; text-decoration: none; }
+        .project-name a:hover { color: #3b82f6; }
+        .project-desc { color: #999; font-size: 0.85rem; margin: 10px 0; line-height: 1.5; }
+        .tech-tag { background: #1e1e1e; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; color: #3b82f6; display: inline-block; margin-right: 6px; margin-bottom: 6px; border: 1px solid #2a2a2a; }
+        .project-stats { display: flex; gap: 15px; margin-top: 12px; font-size: 0.75rem; color: #666; }
+        .loading, .error { text-align: center; padding: 60px; color: #888; }
+        .error { color: #ef4444; }
+        footer { text-align: center; margin-top: 50px; padding-top: 30px; border-top: 1px solid #2a2a2a; color: #666; font-size: 0.8rem; }
+        footer a { color: #3b82f6; text-decoration: none; }
         @media (max-width: 640px) {
-            .container { padding: 0 16px; }
-            h1 { font-size: 1.8rem; }
+            .controls { flex-direction: column; }
+            .search-box input { width: 100%; }
             .projects-grid { grid-template-columns: 1fr; }
-            .controls { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <img class="avatar" id="avatar" src="" alt="avatar">
-            <h1 id="username">Zeen1146</h1>
-            <p class="bio" id="bio">Loading profile from GitHub...</p>
-            <div class="stats" id="stats">
-                <div class="stat-card">
-                    <div class="stat-number" id="repoCount">-</div>
-                    <div class="stat-label">Repositories</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="followers">-</div>
-                    <div class="stat-label">Followers</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="following">-</div>
-                    <div class="stat-label">Following</div>
-                </div>
-            </div>
+<div class="container">
+    <div class="header">
+        <img class="avatar" id="avatar" src="https://avatars.githubusercontent.com/u/186116108?v=4" alt="avatar">
+        <h1 id="username">Zeen1146</h1>
+        <p class="bio" id="bio">Developer | Loading profile...</p>
+        <div class="stats" id="stats">
+            <div class="stat-card"><div class="stat-number" id="repoCount">-</div><div class="stat-label">Repositori</div></div>
+            <div class="stat-card"><div class="stat-number" id="followers">-</div><div class="stat-label">Followers</div></div>
+            <div class="stat-card"><div class="stat-number" id="following">-</div><div class="stat-label">Following</div></div>
         </div>
-
-        <div class="controls">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Cari project... (nama / teknologi)">
-            </div>
-            <div class="filter-group">
-                <button class="filter-btn active" data-filter="all">All Projects</button>
-                <button class="filter-btn" data-filter="featured">Featured</button>
-                <button class="filter-btn" data-filter="javascript">JavaScript</button>
-                <button class="filter-btn" data-filter="python">Python</button>
-                <button class="filter-btn" data-filter="html">HTML/CSS</button>
-                <button class="filter-btn" data-filter="other">Lainnya</button>
-            </div>
-        </div>
-
-        <div class="info-bar">
-            <span>Menampilkan <strong id="displayCount">0</strong> dari <span id="totalCount">0</span> project</span>
-            <span> Auto-sync dari GitHub Zeen1146</span>
-        </div>
-
-        <div class="projects-grid" id="projectsGrid">
-            <div class="loading">Memuat data dari GitHub API...</div>
-        </div>
-
-        <footer>
-            <p> GitHub Portfolio • Auto-sync semua repository dari Zeen1146</p>
-            <p style="margin-top: 8px;">Project unggulan: <a href="https://github.com/Zeen1146/BYVOID" target="_blank" style="color:#3b82f6;">BYVOID</a> • <a href="https://github.com/Zeen1146/financial" target="_blank" style="color:#3b82f6;">financial</a></p>
-        </footer>
     </div>
 
-    <a href="https://github.com/Zeen1146" id="githubLink" class="github-corner" target="_blank">
-        <svg height="28" width="28" viewBox="0 0 16 16" fill="white">
-            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
-        </svg>
-    </a>
+    <div class="controls">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Cari project...">
+        </div>
+        <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">Semua</button>
+            <button class="filter-btn" data-filter="featured">Featured</button>
+            <button class="filter-btn" data-filter="HTML">HTML</button>
+            <button class="filter-btn" data-filter="JavaScript">JavaScript</button>
+        </div>
+    </div>
 
-    <script>
-        // =============== KONFIGURASI ===============
-        // USERNAME GITHUB KAMU
-        const GITHUB_USERNAME = "Zeen1146";
-        
-        // TOKEN TIDAK DIPERLUKAN (repo public)
-        // AMAN! Tidak ada token di frontend
-        
-        let allRepos = [];
-        let filteredRepos = [];
-        let currentFilter = "all";
-        let searchQuery = "";
-        
-        async function fetchGitHub(endpoint) {
-            const response = await fetch(`https://api.github.com/${endpoint}`);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            return response.json();
-        }
-        
-        async function loadPortfolio() {
-            try {
-                const userData = await fetchGitHub(`users/${GITHUB_USERNAME}`);
-                document.getElementById('avatar').src = userData.avatar_url;
-                document.getElementById('username').innerHTML = userData.name || userData.login;
-                document.getElementById('bio').innerHTML = userData.bio || `${userData.login} — Developer portfolio auto-sync dari GitHub`;
-                document.getElementById('repoCount').innerText = userData.public_repos;
-                document.getElementById('followers').innerText = userData.followers;
-                document.getElementById('following').innerText = userData.following;
-                document.getElementById('githubLink').href = userData.html_url;
-                
-                const reposData = await fetchGitHub(`users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
-                
-                allRepos = reposData
-                    .filter(repo => {
-                        if (!repo.description && !repo.name.toLowerCase().includes('portfolio')) return false;
-                        return true;
-                    })
-                    .map(repo => ({
-                        id: repo.id,
-                        name: repo.name,
-                        description: repo.description || "Tidak ada deskripsi",
-                        html_url: repo.html_url,
-                        homepage: repo.homepage,
-                        language: repo.language || "Other",
-                        stargazers_count: repo.stargazers_count,
-                        forks_count: repo.forks_count,
-                        updated_at: repo.updated_at,
-                        topics: repo.topics || [],
-                        isFeatured: (repo.topics && repo.topics.includes('featured')) || false,
-                        hasDemo: !!repo.homepage
-                    }));
-                
-                allRepos.sort((a, b) => {
-                    if (a.isFeatured !== b.isFeatured) return a.isFeatured ? -1 : 1;
-                    if (a.stargazers_count !== b.stargazers_count) return b.stargazers_count - a.stargazers_count;
-                    return new Date(b.updated_at) - new Date(a.updated_at);
-                });
-                
-                applyFilters();
-                
-            } catch (error) {
-                console.error(error);
-                document.getElementById('projectsGrid').innerHTML = `
-                    <div class="error">
-                        Gagal mengambil data dari GitHub API<br><br>
-                        <small>${error.message}</small><br><br>
-                        Tips: Cek koneksi atau coba refresh.
-                    </div>
-                `;
-            }
-        }
-        
-        function applyFilters() {
-            let filtered = [...allRepos];
+    <div class="info-bar">
+        <span>📦 Menampilkan <strong id="displayCount">0</strong> dari <span id="totalCount">0</span> project</span>
+        <span>🔄 Auto-sync dari GitHub</span>
+    </div>
+
+    <div class="projects-grid" id="projectsGrid">
+        <div class="loading">⏳ Memuat data dari GitHub API...</div>
+    </div>
+
+    <footer>
+        <p>© 2026 Zeen1146 • <a href="https://github.com/Zeen1146" target="_blank">GitHub Profile</a></p>
+        <p style="margin-top: 8px;">🚀 Semua repository otomatis tersinkronasi</p>
+    </footer>
+</div>
+
+<script>
+    const GITHUB_USERNAME = "Zeen1146";
+    
+    let allRepos = [];
+    let filteredRepos = [];
+    let currentFilter = "all";
+    let searchQuery = "";
+
+    async function fetchGitHub(endpoint) {
+        const response = await fetch(`https://api.github.com/${endpoint}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json();
+    }
+
+    async function loadPortfolio() {
+        try {
+            // Ambil data user
+            const userData = await fetchGitHub(`users/${GITHUB_USERNAME}`);
+            document.getElementById('avatar').src = userData.avatar_url;
+            document.getElementById('username').innerHTML = userData.name || userData.login;
+            document.getElementById('bio').innerHTML = userData.bio || `${userData.login} — Developer portfolio auto-sync dari GitHub`;
+            document.getElementById('repoCount').innerText = userData.public_repos;
+            document.getElementById('followers').innerText = userData.followers;
+            document.getElementById('following').innerText = userData.following;
+
+            // Ambil daftar repo
+            const reposData = await fetchGitHub(`users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`);
             
-            if (currentFilter === 'featured') {
-                filtered = filtered.filter(repo => repo.isFeatured === true);
-            } else if (currentFilter === 'javascript') {
-                filtered = filtered.filter(repo => repo.language === 'JavaScript' || repo.language === 'TypeScript');
-            } else if (currentFilter === 'python') {
-                filtered = filtered.filter(repo => repo.language === 'Python');
-            } else if (currentFilter === 'html') {
-                filtered = filtered.filter(repo => ['HTML', 'CSS', 'SCSS'].includes(repo.language));
-            } else if (currentFilter === 'other') {
-                filtered = filtered.filter(repo => !['JavaScript', 'TypeScript', 'Python', 'HTML', 'CSS', 'SCSS'].includes(repo.language));
-            }
-            
-            if (searchQuery.trim()) {
-                const query = searchQuery.toLowerCase();
-                filtered = filtered.filter(repo => 
-                    repo.name.toLowerCase().includes(query) ||
-                    (repo.description && repo.description.toLowerCase().includes(query)) ||
-                    (repo.language && repo.language.toLowerCase().includes(query))
-                );
-            }
-            
-            filteredRepos = filtered;
-            document.getElementById('displayCount').innerText = filteredRepos.length;
-            document.getElementById('totalCount').innerText = allRepos.length;
-            renderProjects();
-        }
-        
-        function renderProjects() {
-            const grid = document.getElementById('projectsGrid');
-            
-            if (filteredRepos.length === 0) {
-                grid.innerHTML = `<div class="loading">Tidak ada project yang sesuai dengan filter</div>`;
-                return;
-            }
-            
-            grid.innerHTML = filteredRepos.map(repo => {
-                const techs = [repo.language, ...repo.topics.slice(0, 3)].filter(Boolean).slice(0, 4);
-                
-                return `
-                    <div class="project-card">
-                        <div class="project-content">
-                            <div class="project-name">
-                                <a href="${repo.html_url}" target="_blank">📁 ${escapeHtml(repo.name)}</a>
-                                ${repo.isFeatured ? '<span style="background:#3b82f6; padding:2px 10px; border-radius:20px; font-size:0.65rem;">⭐ Featured</span>' : ''}
-                                ${repo.hasDemo ? `<a href="${repo.homepage}" target="_blank" style="background:#1a1a1a; padding:2px 10px; border-radius:20px; font-size:0.65rem; text-decoration:none;">🔗 Demo</a>` : ''}
-                            </div>
-                            <div class="project-desc">${escapeHtml(repo.description)}</div>
-                            <div class="tech-stack">
-                                ${techs.map(tech => `<span class="tech-tag">${escapeHtml(tech)}</span>`).join('')}
-                            </div>
-                            <div class="project-stats">
-                                <span>⭐ ${repo.stargazers_count}</span>
-                                <span>🔄 ${repo.forks_count}</span>
-                                <span>📅 ${formatDate(repo.updated_at)}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-        function formatDate(dateStr) {
-            const date = new Date(dateStr);
-            const now = new Date();
-            const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
-            if (diffDays < 1) return 'Hari ini';
-            if (diffDays < 7) return `${diffDays} hari lalu`;
-            if (diffDays < 30) return `${Math.floor(diffDays / 7)} minggu lalu`;
-            return date.toLocaleDateString('id-ID', { year: 'numeric', month: 'short' });
-        }
-        
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
-        
-        function initEventListeners() {
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    currentFilter = btn.getAttribute('data-filter');
-                    applyFilters();
-                });
+            allRepos = reposData.map(repo => ({
+                id: repo.id,
+                name: repo.name,
+                description: repo.description || "Tidak ada deskripsi",
+                html_url: repo.html_url,
+                homepage: repo.homepage,
+                language: repo.language || "Other",
+                stargazers_count: repo.stargazers_count,
+                forks_count: repo.forks_count,
+                updated_at: repo.updated_at,
+                isFeatured: repo.name === "BYVOID" || repo.name === "financial" // Mark BYVOID & financial as featured
+            }));
+
+            // Urutkan: featured dulu, lalu berdasarkan update terbaru
+            allRepos.sort((a, b) => {
+                if (a.isFeatured !== b.isFeatured) return a.isFeatured ? -1 : 1;
+                return new Date(b.updated_at) - new Date(a.updated_at);
             });
             
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('input', (e) => {
-                searchQuery = e.target.value;
+            applyFilters();
+        } catch (error) {
+            console.error(error);
+            document.getElementById('projectsGrid').innerHTML = `
+                <div class="error">
+                    ❌ Gagal mengambil data dari GitHub API<br>
+                    <small>${error.message}</small><br><br>
+                    💡 Coba refresh halaman
+                </div>
+            `;
+        }
+    }
+
+    function applyFilters() {
+        let filtered = [...allRepos];
+        
+        if (currentFilter !== "all" && currentFilter !== "featured") {
+            filtered = filtered.filter(repo => repo.language === currentFilter);
+        } else if (currentFilter === "featured") {
+            filtered = filtered.filter(repo => repo.isFeatured === true);
+        }
+        
+        if (searchQuery.trim()) {
+            const query = searchQuery.toLowerCase();
+            filtered = filtered.filter(repo => 
+                repo.name.toLowerCase().includes(query) ||
+                (repo.description && repo.description.toLowerCase().includes(query)) ||
+                (repo.language && repo.language.toLowerCase().includes(query))
+            );
+        }
+        
+        filteredRepos = filtered;
+        document.getElementById('displayCount').innerText = filteredRepos.length;
+        document.getElementById('totalCount').innerText = allRepos.length;
+        renderProjects();
+    }
+
+    function renderProjects() {
+        const grid = document.getElementById('projectsGrid');
+        
+        if (filteredRepos.length === 0) {
+            grid.innerHTML = `<div class="loading">📭 Tidak ada project yang sesuai</div>`;
+            return;
+        }
+        
+        grid.innerHTML = filteredRepos.map(repo => `
+            <div class="project-card">
+                <div class="project-name">
+                    <a href="${repo.html_url}" target="_blank">📁 ${escapeHtml(repo.name)}</a>
+                    ${repo.isFeatured ? '<span style="background:#3b82f6; padding:2px 10px; border-radius:20px; font-size:0.65rem;">⭐ Featured</span>' : ''}
+                </div>
+                <div class="project-desc">${escapeHtml(repo.description)}</div>
+                <div>
+                    ${repo.language !== "Other" ? `<span class="tech-tag">${escapeHtml(repo.language)}</span>` : ''}
+                </div>
+                <div class="project-stats">
+                    <span>⭐ ${repo.stargazers_count}</span>
+                    <span>🔄 ${repo.forks_count}</span>
+                    <span>📅 ${formatDate(repo.updated_at)}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function formatDate(dateStr) {
+        const date = new Date(dateStr);
+        const now = new Date();
+        const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+        if (diffDays < 1) return 'Hari ini';
+        if (diffDays < 7) return `${diffDays} hari lalu`;
+        if (diffDays < 30) return `${Math.floor(diffDays / 7)} minggu lalu`;
+        return date.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function initEventListeners() {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.getAttribute('data-filter');
                 applyFilters();
             });
-        }
+        });
         
-        initEventListeners();
-        loadPortfolio();
-    </script>
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            applyFilters();
+        });
+    }
+
+    initEventListeners();
+    loadPortfolio();
+</script>
 </body>
-</html>
+    </html>
