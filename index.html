@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ByVoid | Auto Portfolio</title>
+    <title>ByVoid | Portfolio</title>
     <style>
         * {
             margin: 0;
@@ -50,12 +50,6 @@
             border: 3px solid #ef4444;
             margin-bottom: 20px;
             object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .avatar:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
         }
 
         .marquee-red {
@@ -67,7 +61,6 @@
             animation: shine 2s linear infinite, pulse 1.5s ease-in-out infinite;
             font-size: 2.5rem;
             font-weight: 800;
-            letter-spacing: 2px;
             display: inline-block;
         }
 
@@ -86,15 +79,9 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         .bio {
             color: #9ca3af;
             margin-bottom: 20px;
-            font-size: 1rem;
         }
 
         .stats {
@@ -112,7 +99,6 @@
             border-radius: 60px;
             border: 1px solid rgba(239, 68, 68, 0.3);
             transition: all 0.2s ease;
-            cursor: pointer;
         }
 
         .stat-card:hover {
@@ -204,7 +190,6 @@
             border-radius: 24px;
             padding: 24px;
             transition: all 0.3s ease;
-            animation: fadeInUp 0.5s ease;
         }
 
         .project-card:hover {
@@ -260,9 +245,6 @@
             border-radius: 20px;
             font-size: 0.7rem;
             color: #ef4444;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
@@ -329,19 +311,6 @@
             .projects-grid { grid-template-columns: 1fr; }
             .marquee-red { font-size: 1.8rem; }
         }
-
-        /* Scrollbar styling */
-        .file-list::-webkit-scrollbar {
-            width: 4px;
-        }
-        .file-list::-webkit-scrollbar-track {
-            background: #1a1a1a;
-            border-radius: 10px;
-        }
-        .file-list::-webkit-scrollbar-thumb {
-            background: #ef4444;
-            border-radius: 10px;
-        }
     </style>
 </head>
 <body>
@@ -374,7 +343,7 @@
 
     <div class="info-bar">
         <span>📦 Menampilkan <strong id="displayCount">0</strong> repository</span>
-        <span>🔄 Auto-sync dari GitHub | Setiap push akan otomatis muncul</span>
+        <span>🔄 Auto-sync dari GitHub | Klik file HTML langsung ke web</span>
     </div>
 
     <div class="projects-grid" id="projectsGrid">
@@ -383,12 +352,12 @@
 
     <footer>
         <p>© 2026 ByVoid • <a href="https://github.com/Zeen1146" target="_blank">GitHub Profile</a></p>
-        <p style="margin-top: 8px;">✦ Mendeteksi semua file & bahasa pemrograman secara otomatis ✦</p>
+        <p style="margin-top: 8px;">✦ Semua file HTML bisa diakses langsung via GitHub Pages ✦</p>
     </footer>
 </div>
 
 <script>
-    // Particle Network (background animasi)
+    // Particle Network
     const canvas = document.getElementById('particleCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -476,112 +445,101 @@
     initParticles(90);
     animateParticles();
 
-    // =============== GITHUB API - SEMUA REPO OTOMATIS ===============
+    // =============== GITHUB API ===============
     const USERNAME = "Zeen1146";
     
     let allRepos = [];
     let filteredRepos = [];
     let currentFilter = "all";
     let searchQuery = "";
-    let totalFilesCount = 0;
 
-    async function fetchGitHub(endpoint) {
-        const res = await fetch(`https://api.github.com/${endpoint}`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-    }
-
-    // Ambil semua repo user (tanpa fork)
-    async function getAllRepos() {
-        let page = 1;
-        let allReposData = [];
-        while (true) {
-            const repos = await fetchGitHub(`users/${USERNAME}/repos?page=${page}&per_page=100&sort=updated`);
-            if (repos.length === 0) break;
-            allReposData.push(...repos);
-            page++;
-        }
-        // Filter fork dan yang tidak public
-        return allReposData.filter(repo => !repo.fork && repo.visibility === 'public');
-    }
-
-    // Ambil daftar file di repo (hanya root, bisa dikembangkan)
-    async function getRepoFiles(repoName) {
+    async function fetchAPI(endpoint) {
         try {
-            const contents = await fetchGitHub(`repos/${USERNAME}/${repoName}/contents`);
-            return contents.filter(item => item.type === 'file');
+            const res = await fetch(`https://api.github.com/${endpoint}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return await res.json();
         } catch (e) {
-            return [];
-        }
-    }
-
-    // Dapatkan bahasa dari repo
-    async function getRepoLanguages(repoName) {
-        try {
-            const langs = await fetchGitHub(`repos/${USERNAME}/${repoName}/languages`);
-            return Object.keys(langs);
-        } catch (e) {
-            return [];
+            console.warn(`Gagal fetch ${endpoint}:`, e);
+            return null;
         }
     }
 
     async function loadAllData() {
         try {
-            // Ambil profile
-            const user = await fetchGitHub(`users/${USERNAME}`);
-            document.getElementById('repoCount').innerText = user.public_repos;
+            // Profile
+            const user = await fetchAPI(`users/${USERNAME}`);
+            if (user) {
+                document.getElementById('repoCount').innerText = user.public_repos || 0;
+            }
 
             // Ambil semua repo
-            const repos = await getAllRepos();
+            const repos = await fetchAPI(`users/${USERNAME}/repos?per_page=100&sort=updated&direction=desc`);
             
+            if (!repos || repos.length === 0) {
+                document.getElementById('projectsGrid').innerHTML = `
+                    <div class="error">
+                        ❌ Tidak ada repository ditemukan<br>
+                        <small>Username: ${USERNAME}</small><br><br>
+                        💡 Pastikan username benar dan repository bersifat public
+                    </div>
+                `;
+                return;
+            }
+
             const projects = [];
-            totalFilesCount = 0;
+            let totalFiles = 0;
             const allLanguages = new Set();
 
             for (const repo of repos) {
-                // Ambil file dan bahasa untuk setiap repo
-                const [files, languages] = await Promise.all([
-                    getRepoFiles(repo.name),
-                    getRepoLanguages(repo.name)
-                ]);
+                if (repo.fork) continue; // skip fork
                 
-                languages.forEach(lang => allLanguages.add(lang));
-                totalFilesCount += files.length;
-
-                // Filter file yang bisa di-preview (html, js, py, css, txt, md, dll)
-                const previewableExtensions = ['.html', '.js', '.py', '.css', '.txt', '.md', '.json', '.xml'];
-                const previewFiles = files.filter(file => 
-                    previewableExtensions.some(ext => file.name.endsWith(ext))
-                );
-
-                // Tentukan kategori berdasarkan bahasa utama
+                // Ambil bahasa
+                const langs = await fetchAPI(`repos/${USERNAME}/${repo.name}/languages`);
+                const langList = langs ? Object.keys(langs) : [];
+                langList.forEach(l => allLanguages.add(l));
+                
+                // Ambil daftar file di root
+                const contents = await fetchAPI(`repos/${USERNAME}/${repo.name}/contents`);
+                let htmlFiles = [];
+                let otherFiles = [];
+                
+                if (contents && Array.isArray(contents)) {
+                    htmlFiles = contents.filter(f => f.name.endsWith('.html') && f.type === 'file');
+                    otherFiles = contents.filter(f => f.type === 'file' && !f.name.endsWith('.html')).slice(0, 5);
+                    totalFiles += contents.filter(f => f.type === 'file').length;
+                }
+                
+                // Tentukan kategori
                 let category = "web";
-                if (languages.includes('Python')) category = "python";
-                else if (languages.includes('JavaScript') || languages.includes('TypeScript')) category = "javascript";
-                else if (languages.includes('HTML')) category = "web";
-
+                if (langList.includes('Python')) category = "python";
+                else if (langList.includes('JavaScript') || langList.includes('TypeScript')) category = "javascript";
+                else if (langList.includes('HTML')) category = "web";
+                
                 projects.push({
                     name: repo.name,
-                    description: repo.description || `Repository ${repo.name} - ${languages.join(', ') || 'Multi language'}`,
+                    description: repo.description || `Repository ${repo.name}`,
                     url: repo.html_url,
-                    languages: languages,
+                    languages: langList.slice(0, 5),
                     category: category,
                     stars: repo.stargazers_count,
                     forks: repo.forks_count,
                     updated_at: repo.updated_at,
                     baseUrl: `https://${USERNAME}.github.io/${repo.name}/`,
-                    files: previewFiles.map(file => ({
-                        name: file.name,
-                        path: file.name,
-                        icon: getFileIcon(file.name)
+                    htmlFiles: htmlFiles.map(f => ({
+                        name: f.name.replace('.html', '').replace(/%20/g, ' '),
+                        fileName: f.name
                     })),
-                    totalFiles: files.length
+                    otherFiles: otherFiles.map(f => ({
+                        name: f.name,
+                        fileName: f.name
+                    })),
+                    totalFiles: (contents?.filter(f => f.type === 'file').length) || 0
                 });
             }
-
-            document.getElementById('totalFiles').innerText = totalFilesCount;
+            
+            document.getElementById('totalFiles').innerText = totalFiles;
             document.getElementById('languagesCount').innerText = allLanguages.size;
-
+            
             allRepos = projects;
             applyFilters();
             
@@ -595,17 +553,6 @@
                 </div>
             `;
         }
-    }
-
-    function getFileIcon(filename) {
-        if (filename.endsWith('.html')) return "🌐";
-        if (filename.endsWith('.js')) return "📜";
-        if (filename.endsWith('.py')) return "🐍";
-        if (filename.endsWith('.css')) return "🎨";
-        if (filename.endsWith('.json')) return "📋";
-        if (filename.endsWith('.md')) return "📝";
-        if (filename.endsWith('.txt')) return "📄";
-        return "📁";
     }
 
     function applyFilters() {
@@ -624,13 +571,19 @@
             filtered = filtered.filter(p => 
                 p.name.toLowerCase().includes(q) || 
                 (p.description && p.description.toLowerCase().includes(q)) ||
-                p.languages.some(lang => lang.toLowerCase().includes(q))
+                p.languages.some(l => l.toLowerCase().includes(q))
             );
         }
         
         filteredRepos = filtered;
         document.getElementById('displayCount').innerText = filteredRepos.length;
         renderProjects();
+    }
+
+    // Fungsi buka file HTML langsung ke web (bukan raw)
+    function openWebApp(repoName, fileName) {
+        const url = `https://${USERNAME}.github.io/${repoName}/${fileName}`;
+        window.open(url, '_blank');
     }
 
     function renderProjects() {
@@ -648,20 +601,32 @@
                 </div>
                 <div class="project-desc">${p.description}</div>
                 <div class="language-stats">
-                    ${p.languages.slice(0, 5).map(lang => `
-                        <span class="lang-tag">💻 ${lang}</span>
-                    `).join('')}
-                    ${p.languages.length > 5 ? `<span class="lang-tag">+${p.languages.length - 5} more</span>` : ''}
+                    ${p.languages.map(lang => `<span class="lang-tag">💻 ${lang}</span>`).join('')}
+                    ${p.languages.length === 0 ? '<span class="lang-tag">📄 No language detected</span>' : ''}
                 </div>
+                
+                ${p.htmlFiles.length > 0 ? `
                 <div class="file-list">
-                    <h4>📂 Files (klik untuk lihat raw / preview):</h4>
-                    ${p.files.length > 0 ? p.files.slice(0, 15).map(file => `
-                        <div class="file-item" onclick="window.open('https://raw.githubusercontent.com/${USERNAME}/${p.name}/main/${file.path}', '_blank')">
-                            ${file.icon} ${file.name.length > 25 ? file.name.substring(0, 22) + '...' : file.name}
+                    <h4>🌐 WEB APPS (klik langsung jalan):</h4>
+                    ${p.htmlFiles.map(file => `
+                        <div class="file-item" onclick="openWebApp('${p.name}', '${file.fileName}')">
+                            ▶ ${file.name}
                         </div>
-                    `).join('') : '<span style="color:#666; font-size:0.7rem;">Belum ada file yang bisa ditampilkan</span>'}
-                    ${p.files.length > 15 ? `<div class="file-item" style="background:#ef4444;" onclick="window.open('${p.url}', '_blank')">+${p.files.length - 15} files lagi</div>` : ''}
+                    `).join('')}
                 </div>
+                ` : ''}
+                
+                ${p.otherFiles.length > 0 ? `
+                <div class="file-list">
+                    <h4>📄 OTHER FILES:</h4>
+                    ${p.otherFiles.map(file => `
+                        <div class="file-item" onclick="window.open('https://raw.githubusercontent.com/${USERNAME}/${p.name}/main/${file.fileName}', '_blank')">
+                            📁 ${file.name}
+                        </div>
+                    `).join('')}
+                </div>
+                ` : ''}
+                
                 <div style="margin-top: 12px; font-size:0.7rem; color:#666; display:flex; justify-content:space-between;">
                     <span>⭐ ${p.stars}</span>
                     <span>🔄 ${p.forks}</span>
