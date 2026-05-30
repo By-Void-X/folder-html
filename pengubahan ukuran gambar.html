@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Pengubah Ukuran Foto | Resize Gambar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #f5f7fc 0%, #e9eef4 100%);
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #1e2a3e;
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+        }
+
+        .header p {
+            opacity: 0.8;
+            margin-top: 0.4rem;
+        }
+
+        .resize-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.8rem;
+            padding: 2rem;
+        }
+
+        .left-area {
+            flex: 1.2;
+            min-width: 280px;
+        }
+
+        .right-area {
+            flex: 1;
+            min-width: 280px;
+            background: #f8fafd;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: inset 0 1px 3px #0001, 0 6px 12px -8px rgba(0,0,0,0.1);
+        }
+
+        .upload-box {
+            background: #ffffff;
+            border: 2px dashed #b9c8e8;
+            border-radius: 1.5rem;
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-bottom: 1.6rem;
+        }
+
+        .upload-box:hover {
+            border-color: #3b82f6;
+            background: #f0f6ff;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-box input {
+            display: none;
+        }
+
+        .preview-container {
+            background: #f1f4f9;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .preview-title {
+            font-weight: 600;
+            color: #1e2a3e;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .canvas-wrapper {
+            background: #fff;
+            border-radius: 1rem;
+            display: inline-block;
+            padding: 0.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border-radius: 0.6rem;
+            background: #eef2f5;
+        }
+
+        .info-text {
+            font-size: 0.75rem;
+            color: #5c6f87;
+            margin-top: 0.7rem;
+        }
+
+        .size-controls {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 1rem;
+            border-left: 4px solid #3b82f6;
+            padding-left: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .preset-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .preset {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1e293b;
+        }
+
+        .preset:hover {
+            background: #eef2ff;
+            border-color: #3b82f6;
+            transform: scale(0.97);
+        }
+
+        .preset.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+            box-shadow: 0 4px 8px rgba(59,130,246,0.3);
+        }
+
+        .custom-size {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .input-group {
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #475569;
+            margin-bottom: 0.25rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.6rem 0.7rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 1rem;
+            font-weight: 500;
+            transition: 0.2s;
+            background: white;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+        }
+
+        .btn-resize {
+            background: #1e2a3e;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.7rem 1.2rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.7rem;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+
+        .btn-resize:hover {
+            background: #0f172a;
+            transform: translateY(-2px);
+        }
+
+        .btn-download {
+            background: #10b981;
+            width: 100%;
+            margin-top: 1rem;
+            padding: 0.8rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 2rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-download:hover:not(:disabled) {
+            background: #059669;
+            transform: scale(0.98);
+        }
+
+        .btn-download:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .status-msg {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            text-align: center;
+            background: #e6f0ff;
+            padding: 0.5rem;
+            border-radius: 1rem;
+            transition: 0.2s;
+        }
+
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+            color: #5c6b7e;
+        }
+
+        @media (max-width: 700px) {
+            .resize-panel {
+                flex-direction: column;
+            }
+            .header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>📐 Ubah Ukuran Foto</h1>
+        <p>Preset populer atau ukuran kustom (lebar × tinggi)</p>
+    </div>
+
+    <div class="resize-panel">
+        <div class="left-area">
+            <div class="upload-box" id="uploadBox">
+                <div class="upload-icon">🖼️📤</div>
+                <p>Klik untuk pilih foto</p>
+                <input type="file" id="fileInput" accept="image/jpeg, image/png, image/webp, image/bmp, image/gif">
+            </div>
+
+            <div class="preview-container">
+                <div class="preview-title">🔍 Gambar Asli</div>
+                <div class="canvas-wrapper">
+                    <canvas id="sourceCanvas" width="300" height="200" style="max-width:100%; height:auto;"></canvas>
+                </div>
+                <div class="info-text" id="originalSizeInfo">Belum ada gambar</div>
+            </div>
+        </div>
+
+        <div class="right-area">
+            <div class="size-controls">
+                <div class="section-title">⚙️ Pilih Ukuran</div>
+                <div class="preset-buttons" id="presetContainer"></div>
+
+                <div class="custom-size">
+                    <div class="input-group">
+                        <label>📏 Lebar (px)</label>
+                        <input type="number" id="widthInput" placeholder="192" value="192" min="1" max="4000">
+                    </div>
+                    <div class="input-group">
+                        <label>📐 Tinggi (px)</label>
+                        <input type="number" id="heightInput" placeholder="192" value="192" min="1" max="4000">
+                    </div>
+                    <button class="btn-resize" id="applyResizeBtn">✂️ Terapkan Ukuran</button>
+                </div>
+            </div>
+
+            <div class="preview-title" style="margin-top: 0.5rem;">✨ Hasil Ubah Ukuran</div>
+            <div style="text-align: center;">
+                <canvas id="resultCanvas" width="200" height="200" style="max-width:100%; border-radius:1rem; box-shadow:0 6px 12px -6px rgba(0,0,0,0.15);"></canvas>
+                <div class="info-text" id="resultSizeInfo">Belum diresize</div>
+            </div>
+
+            <button class="btn-download" id="downloadBtn" disabled>⬇️ Unduh Foto Hasil Resize</button>
+            <div id="statusMessage" class="status-msg">✅ Siap — pilih preset atau atur ukuran sendiri</div>
+        </div>
+    </div>
+    <footer>• Bebas atur lebar & tinggi sesuai keinginan • Hasil resize dalam format PNG berkualitas tinggi</footer>
+</div>
+
+<script>
+    (function() {
+        // DOM elements
+        const fileInput = document.getElementById('fileInput');
+        const uploadBox = document.getElementById('uploadBox');
+        const sourceCanvas = document.getElementById('sourceCanvas');
+        const resultCanvas = document.getElementById('resultCanvas');
+        const widthInput = document.getElementById('widthInput');
+        const heightInput = document.getElementById('heightInput');
+        const applyResizeBtn = document.getElementById('applyResizeBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const originalSizeInfo = document.getElementById('originalSizeInfo');
+        const resultSizeInfo = document.getElementById('resultSizeInfo');
+        const statusMsgDiv = document.getElementById('statusMessage');
+
+        // State
+        let originalImage = null;
+        let originalWidth = 0, originalHeight = 0;
+        let currentResizedBlob = null;
+        let currentResizedWidth = 0, currentResizedHeight = 0;
+
+        // Helper status
+        function setStatus(message, isError = false) {
+            statusMsgDiv.innerHTML = isError ? `⚠️ ${message}` : `✅ ${message}`;
+            statusMsgDiv.style.background = isError ? '#ffe6e5' : '#e6f0ff';
+            statusMsgDiv.style.color = isError ? '#b91c1c' : '#155799';
+        }
+
+        // Gambar asli ke canvas
+        function drawOriginalToCanvas() {
+            if (!originalImage) {
+                const ctx = sourceCanvas.getContext('2d');
+                ctx.fillStyle = "#eef2f5";
+                ctx.fillRect(0, 0, sourceCanvas.width, sourceCanvas.height);
+                ctx.fillStyle = "#8ba0bc";
+                ctx.font = "12px 'Segoe UI'";
+                ctx.fillText("Belum ada gambar", 20, sourceCanvas.height/2);
+                originalSizeInfo.innerText = "Belum ada gambar";
+                return;
+            }
+            
+            const maxWidth = 300;
+            const maxHeight = 220;
+            let displayW = originalWidth;
+            let displayH = originalHeight;
+            
+            if (displayW > maxWidth) {
+                displayH = (displayH * maxWidth) / displayW;
+                displayW = maxWidth;
+            }
+            if (displayH > maxHeight) {
+                displayW = (displayW * maxHeight) / displayH;
+                displayH = maxHeight;
+            }
+            
+            sourceCanvas.width = displayW;
+            sourceCanvas.height = displayH;
+            const ctx = sourceCanvas.getContext('2d');
+            ctx.drawImage(originalImage, 0, 0, displayW, displayH);
+            originalSizeInfo.innerText = `📷 Ukuran asli: ${originalWidth} × ${originalHeight} px`;
+        }
+
+        // Fungsi resize utama
+        async function resizeAndShow(targetWidth, targetHeight) {
+            if (!originalImage) {
+                setStatus("Unggah gambar terlebih dahulu!", true);
+                return false;
+            }
+
+            let w = parseInt(targetWidth);
+            let h = parseInt(targetHeight);
+            if (isNaN(w) || w <= 0) w = 100;
+            if (isNaN(h) || h <= 0) h = 100;
+            if (w > 5000) w = 5000;
+            if (h > 5000) h = 5000;
+
+            widthInput.value = w;
+            heightInput.value = h;
+
+            try {
+                // Buat canvas untuk resize
+                const offCanvas = document.createElement('canvas');
+                offCanvas.width = w;
+                offCanvas.height = h;
+                const ctx = offCanvas.getContext('2d');
+                ctx.drawImage(originalImage, 0, 0, w, h);
+
+                // Tampilkan di result canvas (dengan preview proporsional)
+                const maxPreview = 200;
+                let previewW = w, previewH = h;
+                if (previewW > maxPreview) {
+                    previewH = (previewH * maxPreview) / previewW;
+                    previewW = maxPreview;
+                }
+                if (previewH > maxPreview) {
+                    previewW = (previewW * maxPreview) / previewH;
+                    previewH = maxPreview;
+                }
+                resultCanvas.width = previewW;
+                resultCanvas.height = previewH;
+                const resultCtx = resultCanvas.getContext('2d');
+                resultCtx.drawImage(offCanvas, 0, 0, previewW, previewH);
+
+                // Simpan blob
+                const blob = await new Promise(resolve => offCanvas.toBlob(resolve, 'image/png'));
+                currentResizedBlob = blob;
+                currentResizedWidth = w;
+                currentResizedHeight = h;
+                resultSizeInfo.innerText = `📏 Hasil: ${w} × ${h} px (PNG)`;
+                downloadBtn.disabled = false;
+                setStatus(`Berhasil ubah ukuran ke ${w}×${h} px`, false);
+                return true;
+            } catch (err) {
+                console.error(err);
+                setStatus("Gagal memproses resize", true);
+                downloadBtn.disabled = true;
+                return false;
+            }
+        }
+
+        // Load gambar dari file
+        function loadImageFromFile(file) {
+            if (!file || !file.type.match('image.*')) {
+                setStatus("File bukan gambar yang valid", true);
+                return;
+            }
+            
+            setStatus(`Memuat gambar ${file.name}...`, false);
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    originalImage = img;
+                    originalWidth = img.width;
+                    originalHeight = img.height;
+                    drawOriginalToCanvas();
+                    
+                    // Reset hasil resize
+                    currentResizedBlob = null;
+                    downloadBtn.disabled = true;
+                    resultSizeInfo.innerText = "Belum diresize";
+                    
+                    // Clear result canvas
+                    const resCtx = resultCanvas.getContext('2d');
+                    resultCanvas.width = 200;
+                    resultCanvas.height = 200;
+                    resCtx.fillStyle = "#f0f2f5";
+                    resCtx.fillRect(0, 0, resultCanvas.width, resultCanvas.height);
+                    resCtx.fillStyle = "#5a6e8a";
+                    resCtx.font = "12px system-ui";
+                    resCtx.fillText("Klik 'Terapkan'", 10, 40);
+                    
+                    // Reset preset highlight
+                    document.querySelectorAll('.preset').forEach(btn => btn.classList.remove('active'));
+                    
+                    setStatus(`✓ Gambar "${file.name}" berhasil dimuat (${originalWidth}×${originalHeight})`, false);
+                };
+                
+                img.onerror = () => {
+                    setStatus("Gagal memuat gambar, file mungkin corrupt", true);
+                };
+                img.src = e.target.result;
+            };
+            
+            reader.onerror = () => {
+                setStatus("Gagal membaca file", true);
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        // Event upload via klik
+        uploadBox.onclick = function() {
+            fileInput.click();
+        };
+        
+        fileInput.onchange = function(e) {
+            if (e.target.files && e.target.files[0]) {
+                loadImageFromFile(e.target.files[0]);
+            }
+        };
+        
+        // Drag and drop
+        uploadBox.ondragover = function(e) {
+            e.preventDefault();
+            uploadBox.style.background = "#e9f0fe";
+            uploadBox.style.borderColor = "#3b82f6";
+        };
+        
+        uploadBox.ondragleave = function() {
+            uploadBox.style.background = "#ffffff";
+            uploadBox.style.borderColor = "#b9c8e8";
+        };
+        
+        uploadBox.ondrop = function(e) {
+            e.preventDefault();
+            uploadBox.style.background = "#ffffff";
+            uploadBox.style.borderColor = "#b9c8e8";
+            const files = e.dataTransfer.files;
+            if (files && files[0] && files[0].type.match('image.*')) {
+                loadImageFromFile(files[0]);
+            } else {
+                setStatus("Drop file gambar (JPG, PNG, dll)", true);
+            }
+        };
+
+        // Tombol apply resize
+        applyResizeBtn.onclick = function() {
+            if (!originalImage) {
+                setStatus("Upload gambar dulu ya!", true);
+                return;
+            }
+            let newW = parseInt(widthInput.value);
+            let newH = parseInt(heightInput.value);
+            if (isNaN(newW) || newW < 1) newW = 100;
+            if (isNaN(newH) || newH < 1) newH = 100;
+            widthInput.value = newW;
+            heightInput.value = newH;
+            resizeAndShow(newW, newH);
+            // Hapus highlight preset
+            document.querySelectorAll('.preset').forEach(btn => btn.classList.remove('active'));
+        };
+
+        // Download button
+        downloadBtn.onclick = function() {
+            if (!currentResizedBlob) {
+                setStatus("Tidak ada hasil resize. Terapkan ukuran dulu.", true);
+                return;
+            }
+            
+            const url = URL.createObjectURL(currentResizedBlob);
+            const a = document.createElement('a');
+            a.href = url;
+            let fileName = `resized_${currentResizedWidth}x${currentResizedHeight}.png`;
+            if (fileInput.files && fileInput.files[0]) {
+                const origName = fileInput.files[0].name.replace(/\.[^/.]+$/, "");
+                fileName = `${origName}_resized_${currentResizedWidth}x${currentResizedHeight}.png`;
+            }
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            setStatus(`✓ Berhasil mengunduh ${fileName}`, false);
+        };
+
+        // Preset ukuran
+        const presets = [
+            { label: "48×48", w: 48, h: 48 },
+            { label: "96×96", w: 96, h: 96 },
+            { label: "128×128", w: 128, h: 128 },
+            { label: "192×192", w: 192, h: 192 },
+            { label: "256×256", w: 256, h: 256 },
+            { label: "512×512", w: 512, h: 512 },
+            { label: "800×600", w: 800, h: 600 },
+            { label: "1024×768", w: 1024, h: 768 }
+        ];
+
+        // Buat tombol preset
+        const presetContainer = document.getElementById('presetContainer');
+        presets.forEach(preset => {
+            const btn = document.createElement('button');
+            btn.className = 'preset';
+            btn.textContent = preset.label;
+            btn.onclick = function() {
+                if (!originalImage) {
+                    setStatus("Upload gambar dulu untuk pakai preset", true);
+                    return;
+                }
+                widthInput.value = preset.w;
+                heightInput.value = preset.h;
+                resizeAndShow(preset.w, preset.h);
+                // Highlight aktif
+                document.querySelectorAll('.preset').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            };
+            presetContainer.appendChild(btn);
+        });
+
+        // Inisialisasi canvas kosong
+        const ctxSource = sourceCanvas.getContext('2d');
+        ctxSource.fillStyle = "#eef2f5";
+        ctxSource.fillRect(0, 0, sourceCanvas.width, sourceCanvas.height);
+        ctxSource.fillStyle = "#8ba0bc";
+        ctxSource.font = "12px 'Segoe UI'";
+        ctxSource.fillText("Tunggu upload gambar", 20, 100);
+        
+        const ctxRes = resultCanvas.getContext('2d');
+        ctxRes.fillStyle = "#f8fafd";
+        ctxRes.fillRect(0, 0, resultCanvas.width, resultCanvas.height);
+        ctxRes.fillStyle = "#7f8c9a";
+        ctxRes.font = "12px system-ui";
+        ctxRes.fillText("Hasil akan muncul", 10, 40);
+        
+        downloadBtn.disabled = true;
+        
+        console.log("Aplikasi siap digunakan!");
+    })();
+</script>
+</body>
+</html>
+```
