@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ByVoid | Portfolio</title>
+    <title>ByVoid | Auto Portfolio</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,6 @@
             position: relative;
         }
 
-        /* Canvas untuk Particle Network */
         #particleCanvas {
             position: fixed;
             top: 0;
@@ -31,26 +30,19 @@
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 40px 24px;
             position: relative;
             z-index: 1;
         }
 
-        /* Glassmorphism effect */
         .glass-card {
             background: rgba(17, 17, 17, 0.7);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 28px;
             transition: all 0.3s ease;
-        }
-
-        .glass-card:hover {
-            border-color: rgba(239, 68, 68, 0.6);
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
         .header {
@@ -66,7 +58,7 @@
             border: 3px solid #ef4444;
             margin-bottom: 20px;
             object-fit: cover;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
         }
 
         .avatar:hover {
@@ -74,7 +66,6 @@
             box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
         }
 
-        /* Animasi teks berjalan warna merah */
         .marquee-red {
             background: linear-gradient(90deg, #ef4444, #dc2626, #ef4444);
             background-size: 200% auto;
@@ -99,25 +90,13 @@
         }
 
         @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .bio {
@@ -141,13 +120,11 @@
             border-radius: 60px;
             border: 1px solid rgba(239, 68, 68, 0.3);
             transition: all 0.2s ease;
-            cursor: pointer;
         }
 
         .stat-card:hover {
             border-color: #ef4444;
             transform: scale(1.05);
-            background: rgba(239, 68, 68, 0.1);
         }
 
         .stat-number {
@@ -167,7 +144,6 @@
             justify-content: space-between;
             gap: 16px;
             margin-bottom: 30px;
-            animation: fadeInUp 0.6s ease;
         }
 
         .search-box input {
@@ -179,12 +155,10 @@
             color: white;
             width: 260px;
             outline: none;
-            transition: all 0.2s;
         }
 
         .search-box input:focus {
             border-color: #ef4444;
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
         }
 
         .filter-group {
@@ -202,21 +176,12 @@
             color: #ccc;
             cursor: pointer;
             transition: all 0.2s ease;
-            font-weight: 500;
         }
 
-        .filter-btn:hover {
+        .filter-btn:hover, .filter-btn.active {
             background: #ef4444;
             color: white;
             border-color: #ef4444;
-            transform: translateY(-2px);
-        }
-
-        .filter-btn.active {
-            background: #ef4444;
-            color: white;
-            border-color: #ef4444;
-            box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
         }
 
         .info-bar {
@@ -230,12 +195,11 @@
             flex-wrap: wrap;
             font-size: 0.85rem;
             color: #9ca3af;
-            border: 1px solid rgba(59, 130, 246, 0.2);
         }
 
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
             gap: 24px;
             margin-top: 20px;
         }
@@ -246,22 +210,14 @@
             border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 24px;
             padding: 24px;
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            cursor: pointer;
+            transition: all 0.3s ease;
             animation: fadeInUp 0.5s ease;
         }
 
         .project-card:hover {
             border-color: #ef4444;
-            transform: translateY(-8px) scale(1.02);
+            transform: translateY(-5px);
             box-shadow: 0 20px 35px -12px rgba(239, 68, 68, 0.3);
-            background: rgba(20, 20, 20, 0.85);
-        }
-
-        /* Animasi klik */
-        .project-card:active {
-            transform: scale(0.98);
-            transition: transform 0.05s;
         }
 
         .project-name {
@@ -277,7 +233,6 @@
         .project-name a {
             color: white;
             text-decoration: none;
-            transition: color 0.2s;
         }
 
         .project-name a:hover {
@@ -290,7 +245,6 @@
             border-radius: 20px;
             font-size: 0.65rem;
             font-weight: 600;
-            letter-spacing: 1px;
         }
 
         .project-desc {
@@ -307,16 +261,7 @@
             font-size: 0.7rem;
             color: #ef4444;
             display: inline-block;
-            margin-right: 8px;
-            margin-bottom: 8px;
             border: 1px solid rgba(239, 68, 68, 0.3);
-            transition: all 0.2s;
-        }
-
-        .tech-tag:hover {
-            background: #ef4444;
-            color: white;
-            transform: scale(1.05);
         }
 
         .file-list {
@@ -329,7 +274,6 @@
             font-size: 0.75rem;
             color: #9ca3af;
             margin-bottom: 10px;
-            letter-spacing: 1px;
         }
 
         .file-item {
@@ -342,18 +286,22 @@
             cursor: pointer;
             transition: all 0.2s ease;
             border: 1px solid rgba(239, 68, 68, 0.3);
-            font-weight: 500;
         }
 
         .file-item:hover {
             background: #ef4444;
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 5px 12px rgba(239, 68, 68, 0.4);
         }
 
-        .file-item:active {
-            transform: scale(0.95);
+        .loading, .error {
+            text-align: center;
+            padding: 60px;
+            color: #9ca3af;
+        }
+
+        .error {
+            color: #ef4444;
         }
 
         footer {
@@ -370,23 +318,12 @@
             text-decoration: none;
         }
 
-        footer a:hover {
-            text-decoration: underline;
-        }
-
         @media (max-width: 640px) {
             .container { padding: 20px 16px; }
             .controls { flex-direction: column; }
             .search-box input { width: 100%; }
             .projects-grid { grid-template-columns: 1fr; }
             .marquee-red { font-size: 1.8rem; }
-        }
-
-        /* Loading animation */
-        .loading {
-            text-align: center;
-            padding: 60px;
-            color: #9ca3af;
         }
     </style>
 </head>
@@ -400,9 +337,9 @@
         <h1><span class="marquee-red">ByVoid</span></h1>
         <p class="bio">Developer | Creator of ByVoid Ecosystem</p>
         <div class="stats">
-            <div class="stat-card"><div class="stat-number">2</div><div class="stat-label">Repositories</div></div>
-            <div class="stat-card"><div class="stat-number">0</div><div class="stat-label">Followers</div></div>
-            <div class="stat-card"><div class="stat-number">0</div><div class="stat-label">Following</div></div>
+            <div class="stat-card"><div class="stat-number" id="repoCount">-</div><div class="stat-label">Repositories</div></div>
+            <div class="stat-card"><div class="stat-number" id="followers">-</div><div class="stat-label">Followers</div></div>
+            <div class="stat-card"><div class="stat-number" id="following">-</div><div class="stat-label">Following</div></div>
         </div>
     </div>
 
@@ -418,24 +355,25 @@
 
     <div class="info-bar">
         <span>📦 Menampilkan <strong id="displayCount">0</strong> project</span>
-        <span>⚡ Klik app untuk langsung menjalankan</span>
+        <span>🔄 Auto-sync dari GitHub | Setiap upload file HTML akan otomatis muncul</span>
     </div>
 
-    <div class="projects-grid" id="projectsGrid"></div>
+    <div class="projects-grid" id="projectsGrid">
+        <div class="loading">⏳ Memuat data dari GitHub...</div>
+    </div>
 
     <footer>
         <p>© 2026 ByVoid • <a href="https://github.com/Zeen1146" target="_blank">GitHub Profile</a></p>
-        <p style="margin-top: 8px;">✦ Particle Network | Interactive Portfolio ✦</p>
+        <p style="margin-top: 8px;">✦ Setiap file .html di repo BYVOID & financial akan otomatis muncul di sini ✦</p>
     </footer>
 </div>
 
 <script>
-    // Particle Network Animation
+    // Particle Network (sama seperti sebelumnya)
     const canvas = document.getElementById('particleCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
     let mouseX = null, mouseY = null;
-    let connectionDistance = 130;
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -469,9 +407,7 @@
 
     function initParticles(count) {
         particles = [];
-        for (let i = 0; i < count; i++) {
-            particles.push(new Particle());
-        }
+        for (let i = 0; i < count; i++) particles.push(new Particle());
     }
 
     function drawLines() {
@@ -480,28 +416,25 @@
                 const dx = particles[i].x - particles[j].x;
                 const dy = particles[i].y - particles[j].y;
                 const distance = Math.hypot(dx, dy);
-                if (distance < connectionDistance) {
+                if (distance < 130) {
                     ctx.beginPath();
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
-                    const opacity = (1 - distance / connectionDistance) * 0.25;
+                    const opacity = (1 - distance / 130) * 0.25;
                     ctx.strokeStyle = `rgba(239, 68, 68, ${opacity})`;
                     ctx.lineWidth = 0.8;
                     ctx.stroke();
                 }
             }
         }
-        // Mouse connection
         if (mouseX !== null && mouseY !== null) {
             for (let p of particles) {
-                const dx = p.x - mouseX;
-                const dy = p.y - mouseY;
-                const dist = Math.hypot(dx, dy);
-                if (dist < connectionDistance) {
+                const dist = Math.hypot(p.x - mouseX, p.y - mouseY);
+                if (dist < 130) {
                     ctx.beginPath();
                     ctx.moveTo(p.x, p.y);
                     ctx.lineTo(mouseX, mouseY);
-                    const opacity = (1 - dist / connectionDistance) * 0.4;
+                    const opacity = (1 - dist / 130) * 0.4;
                     ctx.strokeStyle = `rgba(239, 68, 68, ${opacity})`;
                     ctx.lineWidth = 1.2;
                     ctx.stroke();
@@ -512,74 +445,106 @@
 
     function animateParticles() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let p of particles) {
-            p.update();
-            p.draw();
-        }
+        for (let p of particles) { p.update(); p.draw(); }
         drawLines();
         requestAnimationFrame(animateParticles);
     }
 
-    window.addEventListener('resize', () => {
-        resizeCanvas();
-        initParticles(90);
-    });
-
-    window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-
-    window.addEventListener('mouseleave', () => {
-        mouseX = null;
-        mouseY = null;
-    });
-
+    window.addEventListener('resize', () => { resizeCanvas(); initParticles(90); });
+    window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+    window.addEventListener('mouseleave', () => { mouseX = null; mouseY = null; });
     resizeCanvas();
     initParticles(90);
     animateParticles();
 
-    // Portfolio Data
-    const projects = [
-        {
-            name: "BYVOID",
-            description: "Kumpulan web tools: QR Generator, Enkripsi, ID Generator, Matrix Effect",
-            url: "https://github.com/Zeen1146/BYVOID",
-            language: "HTML/CSS/JS",
-            featured: true,
-            baseUrl: "https://zeen1146.github.io/BYVOID/",
-            apps: [
-                { name: "QR Kode Generator", file: "QR%20kode%20generator%20V2.html", icon: "🔳" },
-                { name: "Enkripsi Text", file: "enkripsi.html", icon: "🔒" },
-                { name: "ID Generator", file: "id.html", icon: "🆔" },
-                { name: "Matrix Video Effect", file: "matrix-video.html", icon: "🎬" }
-            ]
-        },
-        {
-            name: "financial",
-            description: "Aplikasi pencatatan keuangan & target tabungan dengan Rupiah",
-            url: "https://github.com/Zeen1146/financial",
-            language: "JavaScript",
-            featured: true,
-            baseUrl: "https://zeen1146.github.io/financial/",
-            apps: [
-                { name: "Financial App", file: "index.html", icon: "💰" }
-            ]
-        }
-    ];
-
-    let filteredProjects = [...projects];
+    // =============== OTAMATIS DARI GITHUB API ===============
+    const USERNAME = "Zeen1146";
+    const REPOS_TO_SCAN = ["BYVOID", "financial"];
+    
+    let allProjects = [];
+    let filteredProjects = [];
     let currentFilter = "all";
     let searchQuery = "";
 
+    async function fetchGitHub(endpoint) {
+        const res = await fetch(`https://api.github.com/${endpoint}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+    }
+
+    async function getRepoContents(repo, path = "") {
+        const url = `repos/${USERNAME}/${repo}/contents/${path}`;
+        const data = await fetchGitHub(url);
+        return data;
+    }
+
+    async function loadAllProjects() {
+        try {
+            // Ambil profile
+            const user = await fetchGitHub(`users/${USERNAME}`);
+            document.getElementById('repoCount').innerText = user.public_repos;
+            document.getElementById('followers').innerText = user.followers;
+            document.getElementById('following').innerText = user.following;
+
+            const projects = [];
+
+            for (const repoName of REPOS_TO_SCAN) {
+                try {
+                    const contents = await getRepoContents(repoName);
+                    const htmlFiles = contents.filter(item => 
+                        item.name.endsWith('.html') && 
+                        !item.name.toLowerCase().includes('index')
+                    );
+                    
+                    if (htmlFiles.length > 0) {
+                        // Ambil bahasa dari repo
+                        const repoData = await fetchGitHub(`repos/${USERNAME}/${repoName}`);
+                        const language = repoData.language || "HTML";
+                        
+                        projects.push({
+                            name: repoName,
+                            description: repoData.description || `Kumpulan web tools dari ${repoName}`,
+                            url: repoData.html_url,
+                            language: language,
+                            featured: true,
+                            baseUrl: `https://${USERNAME}.github.io/${repoName}/`,
+                            apps: htmlFiles.map(file => ({
+                                name: file.name.replace('.html', '').replace(/%20/g, ' '),
+                                file: file.name,
+                                icon: "▶"
+                            }))
+                        });
+                    }
+                } catch (e) {
+                    console.warn(`Gagal load ${repoName}:`, e);
+                }
+            }
+
+            allProjects = projects;
+            applyFilters();
+        } catch (error) {
+            console.error(error);
+            document.getElementById('projectsGrid').innerHTML = `
+                <div class="error">
+                    ❌ Gagal mengambil data dari GitHub API<br>
+                    <small>${error.message}</small><br><br>
+                    💡 Coba refresh halaman
+                </div>
+            `;
+        }
+    }
+
     function applyFilters() {
-        let filtered = [...projects];
+        let filtered = [...allProjects];
         if (currentFilter === "featured") {
             filtered = filtered.filter(p => p.featured === true);
         }
         if (searchQuery.trim()) {
             const q = searchQuery.toLowerCase();
-            filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
+            filtered = filtered.filter(p => 
+                p.name.toLowerCase().includes(q) || 
+                p.description.toLowerCase().includes(q)
+            );
         }
         filteredProjects = filtered;
         document.getElementById('displayCount').innerText = filteredProjects.length;
@@ -589,9 +554,10 @@
     function renderProjects() {
         const grid = document.getElementById('projectsGrid');
         if (filteredProjects.length === 0) {
-            grid.innerHTML = '<div class="loading">📭 Tidak ada project yang cocok</div>';
+            grid.innerHTML = '<div class="loading">📭 Tidak ada project yang ditemukan</div>';
             return;
         }
+
         grid.innerHTML = filteredProjects.map(p => `
             <div class="project-card">
                 <div class="project-name">
@@ -599,9 +565,7 @@
                     <span class="featured-badge">★ Featured</span>
                 </div>
                 <div class="project-desc">${p.description}</div>
-                <div>
-                    <span class="tech-tag">${p.language}</span>
-                </div>
+                <div><span class="tech-tag">${p.language}</span></div>
                 <div class="file-list">
                     <h4>▶ APPS (klik untuk menjalankan):</h4>
                     ${p.apps.map(app => `
@@ -630,7 +594,7 @@
     }
 
     initEvents();
-    applyFilters();
+    loadAllProjects();
 </script>
 </body>
-    </html>
+</html>
