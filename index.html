@@ -93,7 +93,7 @@
     }
 
     .card-title {
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
       word-break: break-word;
     }
@@ -122,39 +122,23 @@
 <body>
 
   <header>
-    <h1 id="repo-title">Projects Directory</h1>
-    <p>Pilih folder di bawah ini untuk membuka halaman web target.</p>
+    <h1 id="repo-title">Web Projects</h1>
+    <p>Pilih halaman web di bawah ini untuk membukanya langsung.</p>
   </header>
 
   <main class="container">
-    <div id="status" class="status">Memuat daftar folder...</div>
-    <div id="folder-grid" class="grid" style="display: none;"></div>
+    <div id="status" class="status">Memuat daftar file...</div>
+    <div id="file-grid" class="grid" style="display: none;"></div>
   </main>
 
   <script>
-    // Konfigurasi Otomatis berdasarkan URL GitHub Pages
-    // URL Format: https://USERNAME.github.io/REPOSITORY_NAME/
-    const hostParts = window.location.hostname.split('.');
-    const pathParts = window.location.pathname.split('/').filter(p => p.length > 0);
+    // Deteksi otomatis Username & Repository
+    const username = "By-Void-X";
+    const repository = "folder-html";
 
-    let username = hostParts[0];
-    let repository = pathParts[0] || '';
-
-    // Kustomisasi manual jika dijalankan di localhost atau custom domain:
-    // const username = "USERNAME_GITHUB_KAMU";
-    // const repository = "NAMA_REPO_KAMU";
-
-    document.getElementById('repo-title').textContent = repository ? `${repository} Directory` : 'Projects Directory';
-
-    async function fetchFolders() {
+    async function fetchItems() {
       const statusEl = document.getElementById('status');
-      const gridEl = document.getElementById('folder-grid');
-
-      if (!username || !repository) {
-        statusEl.innerHTML = `<span class="error-msg">Gagal mendeteksi informasi repository. Jika menggunakan custom domain, isi variabel <b>username</b> dan <b>repository</b> di dalam file HTML secara manual.</span>`;
-        return;
-      }
-
+      const gridEl = document.getElementById('file-grid');
       const apiUrl = `https://api.github.com/repos/${username}/${repository}/contents`;
 
       try {
@@ -163,32 +147,42 @@
 
         const items = await response.json();
         
-        // Filter item yang berjenis folder (dir) dan mengabaikan folder tersembunyi (awalan titik)
-        const folders = items.filter(item => item.type === 'dir' && !item.name.startsWith('.'));
+        // Mengambil folder (dir) ATAU file dengan ekstensi .html (kecuali index.html)
+        const validItems = items.filter(item => {
+          if (item.type === 'dir' && !item.name.startsWith('.')) return true;
+          if (item.type === 'file' && item.name.endsWith('.html') && item.name.toLowerCase() !== 'index.html') return true;
+          return false;
+        });
 
-        if (folders.length === 0) {
-          statusEl.textContent = 'Tidak ada folder project yang ditemukan di repository ini.';
+        if (validItems.length === 0) {
+          statusEl.textContent = 'Tidak ada file HTML atau folder yang ditemukan.';
           return;
         }
 
         statusEl.style.display = 'none';
         gridEl.style.display = 'grid';
 
-        folders.forEach(folder => {
+        validItems.forEach(item => {
           const card = document.createElement('a');
           card.className = 'card';
-          // Mengarahkan langsung ke folder (misal: ./nama-folder/)
-          card.href = `./${folder.name}/`;
+          
+          // Tentukan path tautan dan ikon
+          const isDir = item.type === 'dir';
+          card.href = `./${item.name}`;
+          
+          // Merapikan tampilan nama (menghapus .html dari judul jika berupa file)
+          const displayName = isDir ? item.name : item.name.replace(/\.html$/i, '');
+          const icon = isDir ? '📁' : '🌐';
 
           card.innerHTML = `
             <div>
               <div class="card-header">
-                <span class="card-icon">📁</span>
-                <span class="card-title">${folder.name}</span>
+                <span class="card-icon">${icon}</span>
+                <span class="card-title">${displayName}</span>
               </div>
             </div>
             <div class="card-footer">
-              <span>Buka Web Page</span>
+              <span>Buka ${isDir ? 'Folder' : 'Halaman'}</span>
               <span>&rarr;</span>
             </div>
           `;
@@ -197,11 +191,11 @@
         });
 
       } catch (err) {
-        statusEl.innerHTML = `<span class="error-msg">Error: ${err.message}. Pastikan repository bersifat Public.</span>`;
+        statusEl.innerHTML = `<span class="error-msg">Error: ${err.message}</span>`;
       }
     }
 
-    fetchFolders();
+    fetchItems();
   </script>
 </body>
 </html>
